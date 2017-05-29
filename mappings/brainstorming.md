@@ -2,12 +2,12 @@
 
 Master Table:
 
-| id | tmdbid | imdbid | report_count | locked  |
+| id | tmdbid | imdbid | report_count | total_reports | locked  |
 |---|----|----|---|---|
-| 1 | 11     | tt000011 |  13           | true  |
-| 2 | 2      | tt000002 | -4           |  true |
-| 3 | 11     | tt000011 |  -5           | true   |
-| 4 | 2     | tt000002 | 4            | false  |
+| 1 | 11     | tt000011 |  13         | 15  | true  |
+| 2 | 2      | tt000002 | -4          | 6 |  true |
+| 3 | 11     | tt000011 |  -5         | 10  | true   |
+| 4 | 2     | tt000002 | 4            | 50 | false  |
 
 Title Mappings:
 
