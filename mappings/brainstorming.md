@@ -3,7 +3,7 @@
 Master Table:
 
 | id | tmdbid | imdbid | report_count | total_reports | locked  |
-|---|----|----|---|---|
+|---|----|----|---|---|---|
 | 1 | 11     | tt000011 |  13         | 15  | true  |
 | 2 | 2      | tt000002 | -4          | 6 |  true |
 | 3 | 11     | tt000011 |  -5         | 10  | true   |
