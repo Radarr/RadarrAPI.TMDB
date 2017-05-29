@@ -1,0 +1,9 @@
+TMDBDUMP/*
+TMDBDUMP/**
+peewee/*
+peewee/**
+IMDBAPI.py
+ini.json
+**/IMDBAPI.py
+*.log
+*.pyc

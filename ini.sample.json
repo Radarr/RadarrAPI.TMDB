@@ -1,0 +1,15 @@
+{
+	"tmdb_mysql" : {
+		"url" : "localhost",
+		"user" : "myuser",
+		"pass" : "mypass",
+		"db" : "tmdb_copy_database"
+	},
+	
+	"tmdbt_mysql" : {
+		"url" : "localhost",
+		"user" : "myuser",
+		"pass" : "mypass",
+		"db" : "tmdb_copy_database"
+	}
+}
