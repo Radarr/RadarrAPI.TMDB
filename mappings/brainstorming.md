@@ -40,7 +40,57 @@
 - Disapprove mappinng: 2
 - Lock mapping: 3
 
+### Create Syntaxes:
+```
+-- Create syntax for TABLE 'ip_adresses'
+CREATE TABLE `ip_adresses` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `ip` varchar(16) NOT NULL DEFAULT '',
+  `mappingsid` int(11) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_mappingsid_ip` (`mappingsid`),
+  CONSTRAINT `FK_mappingsid_ip` FOREIGN KEY (`mappingsid`) REFERENCES `mappings` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- Create syntax for TABLE 'mappings'
+CREATE TABLE `mappings` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `tmdbid` int(11) NOT NULL,
+  `imdbid` varchar(9) NOT NULL DEFAULT '',
+  `report_count` int(11) NOT NULL,
+  `locked` tinyint(11) NOT NULL DEFAULT '0',
+  `total_reports` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
+
+-- Create syntax for TABLE 'events'
+CREATE TABLE `events` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `type` int(11) unsigned NOT NULL,
+  `mappingsid` int(11) unsigned NOT NULL,
+  `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `FK_mappings_events` (`mappingsid`),
+  CONSTRAINT `FK_mappings_events` FOREIGN KEY (`mappingsid`) REFERENCES `mappings` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+
+-- Create syntax for TABLE 'title_mappings'
+CREATE TABLE `title_mappings` (
+  `mappingsid` int(11) unsigned NOT NULL,
+  `aka_title` text NOT NULL,
+  PRIMARY KEY (`mappingsid`),
+  CONSTRAINT `FK_mappingsid` FOREIGN KEY (`mappingsid`) REFERENCES `mappings` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Create syntax for TABLE 'year_mappings'
+CREATE TABLE `year_mappings` (
+  `mappingsid` int(11) unsigned NOT NULL,
+  `aka_year` smallint(4) NOT NULL,
+  PRIMARY KEY (`mappingsid`),
+  CONSTRAINT `year_mappings_ibfk_1` FOREIGN KEY (`mappingsid`) REFERENCES `mappings` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+```
 ## Possible API
 
 ### POST /mappings/add
