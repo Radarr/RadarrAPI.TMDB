@@ -1,6 +1,6 @@
 ## Possible DB Layout
 
-Master Table:
+### Master Table:
 
 | id | tmdbid | imdbid | report_count | total_reports | locked  |
 |---|----|----|---|---|---|
@@ -9,7 +9,7 @@ Master Table:
 | 3 | 11     | tt000011 |  -5         | 10  | true   |
 | 4 | 2     | tt000002 | 4            | 50 | false  |
 
-Title Mappings:
+### Title Mappings:
 
 | mappingsid (Foreign Key) | aka_title | aka_clean_title |
 |----------|---------------------|---------|
@@ -19,7 +19,7 @@ Title Mappings:
 
 **Note:** Clean title is used to ensure that only one mapping per aka_title exists (should be unique). It also should help mapping with e.g. files.
 
-Year Mappings:
+### Year Mappings:
 
 | mappingsid (Foreign Key) | aka_year |
 |----------|----------|
@@ -27,12 +27,25 @@ Year Mappings:
 | 4 | 1999     | 
 |          |              |
 
+### Meta Table:
+
+| mappingsid (Foreign Key) | Event Type | Date |
+|----|----|----|
+| 1 | 0 | 2017-04-05:15:10:46 |
+| 2 | 1 | 2017-04-07:15:12:33 |
+
+**Event Types:**
+- Add Mapping: 0
+- Approve mapping: 1
+- Disapprove mappinng: 2
+- Lock mapping: 3
+
 
 ## Possible API
 
 ### POST /mappings/add
 
-Add new Mapping
+Add new Mapping. If mapping already exists (determined via clean_title) it is "upvoted".
 
 #### Params
 | name | type |
@@ -53,6 +66,7 @@ Add new Mapping
 
 ```
 {
+  "id" : 1,
   "type" : "title",
   "tmdbid" : 11,
   "imdbid" : "tt0000011",
@@ -64,12 +78,55 @@ Add new Mapping
 
 ```
 {
+  "id" : 2,
   "type" : "year",
   "tmdbid" : 11,
   "imdbid" : "tt0000011",
   "aka_year" : 1978,
   "report_count" : 1,
   "total_reports" : 1
+}
+```
+
+### PUT /mappings/vote
+
+"Vote" on existing mapping
+
+#### Params
+| name | type |
+|--------|----------|
+| id | int |
+| direction | int (either 1 or -1, default 1)|
+
+#### Sample Request
+
+`PUT /mappings/vote?id=1&direction=1`
+
+`PUT /mappings/vote?id=2&direction=-1`
+
+#### Sample Response
+
+```
+{
+  "id" : 1,
+  "type" : "title",
+  "tmdbid" : 11,
+  "imdbid" : "tt0000011",
+  "aka_title" : "Star Wars",
+  "report_count" : 2,
+  "total_reports" : 2
+}
+```
+
+```
+{
+  "id" : 2,
+  "type" : "year",
+  "tmdbid" : 11,
+  "imdbid" : "tt0000011",
+  "aka_year" : 1978,
+  "report_count" : 0,
+  "total_reports" : 2
 }
 ```
 
