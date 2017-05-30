@@ -11,7 +11,7 @@ Master Table:
 
 Title Mappings:
 
-| master_id (Foreign Key) | aka_title           | 
+| mappingsid (Foreign Key) | aka_title           | 
 |----------|---------------------|
 | 1 | Star Wars: Whatevs  |
 | 2 | Ariel: What a beach | 
@@ -19,7 +19,7 @@ Title Mappings:
 
 Year Mappings:
 
-| master_id (Foreign Key) | aka_year |
+| mappingsid (Foreign Key) | aka_year |
 |----------|----------|
 | 3 | 1978     |
 | 4 | 1999     | 
@@ -54,7 +54,9 @@ Add new Mapping
   "type" : "title",
   "tmdbid" : 11,
   "imdbid" : "tt0000011",
-  "aka_title" : "Star Wars"
+  "aka_title" : "Star Wars",
+  "report_count" : 1,
+  "total_reports" : 1
 }
 ```
 
@@ -63,7 +65,9 @@ Add new Mapping
   "type" : "year",
   "tmdbid" : 11,
   "imdbid" : "tt0000011",
-  "aka_year" : 1978
+  "aka_year" : 1978,
+  "report_count" : 1,
+  "total_reports" : 1
 }
 ```
 
@@ -76,29 +80,58 @@ Retrieve mappings for movie
 |--------|----------|---------------------|------|
 | tmdbid | int | only when imdbid is present | -  |
 | imdbid | string (must match: /tt\d{7}/) | only when tmdbid is present | - |
+| type | string (either "title", "year" or "all" | yes | all |
 | min_report | int |      yes    |       3              |
 
 #### Sample Request
 
-`GET /mappings/get?tmdbid=11&min_report=5`
+`GET /mappings/get?tmdbid=11&min_report=-50`
+`GET /mappings/get?tmdbid=11&min_report=5&type=title`
 
 #### Sample Response
 
 ```
-[
-  {
-    "type" : "title",
-    "tmdbid" : 11,
-    "imdbid" : "tt0000011",
-    "aka_title" : "Star Wars"
-  },
-  {
-    "type" : "year",
-    "tmdbid" : 11,
-    "imdbid" : "tt0000011",
-    "aka_year" : 1978
-  }
-]
+{
+  "tmdbid" : 11,
+  "imdbid" : "tt0000011",
+  "titles" : [
+    {
+      "id" : 1,
+      "type" : "title",
+      "aka_title" : "Star Wars",
+      "report_count" : 15,
+      "total_reports" : 20,
+      "locked" : false
+    }
+  ],
+  "years" : [
+    {
+      "id" : 2,
+      "type" : "year",
+      "aka_year" : 1978,
+      "report_count" : -4,
+      "total_reports" : 6,
+      "locked" : true
+    }
+  ]
+}
+```
+
+```
+{
+  "tmdbid" : 11,
+  "imdbid" : "tt0000011",
+  "titles" : [
+    {
+      "id" : 1,
+      "type" : "title",
+      "aka_title" : "Star Wars",
+      "report_count" : 15,
+      "total_reports" : 20,
+      "locked" : false
+    }
+  ]
+}
 ```
 
 ## "Rate Limiting"
@@ -107,7 +140,7 @@ Each IP Address can only "vote" on a mapping once a day.
 
 ### Table for IP Addresses
 
-| ip | masterid |
+| ip | mappingsid |
 |--|--|
 | 192.168.1.117 | 2 |
 
