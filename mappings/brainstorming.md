@@ -36,8 +36,9 @@
 
 **Event Types:**
 - Add Mapping: 0
-- Report ("vote on") mapping: 1
-- Lock mapping: 2
+- Approve mapping: 1
+- Disapprove mappinng: 2
+- Lock mapping: 3
 
 
 ## Possible API
