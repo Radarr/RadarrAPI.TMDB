@@ -52,6 +52,16 @@
 		}
 	}
 	
+	function die_json($message) {
+		$arr = array();
+		$arr["error"] = $message;
+		
+		$res = json_encode(utf8ize($arr));
+
+		echo $res;
+		exit(1);
+	}
+	
 	function clean_title($title) {
 		$title = strtolower($title);
 		$title = str_replace("ä", "ae", $title);
