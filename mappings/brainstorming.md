@@ -11,11 +11,13 @@ Master Table:
 
 Title Mappings:
 
-| mappingsid (Foreign Key) | aka_title           | 
-|----------|---------------------|
-| 1 | Star Wars: Whatevs  |
-| 2 | Ariel: What a beach | 
-| | |
+| mappingsid (Foreign Key) | aka_title | aka_clean_title |
+|----------|---------------------|---------|
+| 1 | Star Wars: Whatevs  | starwarswhatevs |
+| 2 | Ariel: What a beach | arielwhatbeach |
+| | | |
+
+**Note:** Clean title is used to ensure that only one mapping per aka_title exists (should be unique). It also should help mapping with e.g. files.
 
 Year Mappings:
 
