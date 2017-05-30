@@ -45,7 +45,7 @@
 
 ### POST /mappings/add
 
-Add new Mapping
+Add new Mapping. If mapping already exists (determined via clean_title) it is "upvoted".
 
 #### Params
 | name | type |
@@ -66,6 +66,7 @@ Add new Mapping
 
 ```
 {
+  "id" : 1,
   "type" : "title",
   "tmdbid" : 11,
   "imdbid" : "tt0000011",
@@ -77,12 +78,55 @@ Add new Mapping
 
 ```
 {
+  "id" : 2,
   "type" : "year",
   "tmdbid" : 11,
   "imdbid" : "tt0000011",
   "aka_year" : 1978,
   "report_count" : 1,
   "total_reports" : 1
+}
+```
+
+### PUT /mappings/vote
+
+"Vote" on existing mapping
+
+#### Params
+| name | type |
+|--------|----------|
+| id | int |
+| direction | int (either 1 or -1, default 1)|
+
+#### Sample Request
+
+`PUT /mappings/vote?id=1&direction=1`
+
+`PUT /mappings/vote?id=2&direction=-1`
+
+#### Sample Response
+
+```
+{
+  "id" : 1,
+  "type" : "title",
+  "tmdbid" : 11,
+  "imdbid" : "tt0000011",
+  "aka_title" : "Star Wars",
+  "report_count" : 2,
+  "total_reports" : 2
+}
+```
+
+```
+{
+  "id" : 2,
+  "type" : "year",
+  "tmdbid" : 11,
+  "imdbid" : "tt0000011",
+  "aka_year" : 1978,
+  "report_count" : 0,
+  "total_reports" : 2
 }
 ```
 
