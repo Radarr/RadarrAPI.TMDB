@@ -27,6 +27,18 @@ Year Mappings:
 | 4 | 1999     | 
 |          |              |
 
+Meta Table:
+
+| mappingsid (Foreign Key) | Event Type | Date |
+|----|----|----|
+| 1 | 0 | 2017-04-05:15:10:46 |
+| 2 | 1 | 2017-04-07:15:12:33 |
+
+**Event Types:**
+- Add Mapping: 0
+- Report ("vote on") mapping: 1
+- Lock mapping: 2
+
 
 ## Possible API
 
