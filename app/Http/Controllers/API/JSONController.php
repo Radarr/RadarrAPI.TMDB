@@ -15,6 +15,8 @@ class JSONController extends Controller
      * @return Response
      */
 	public function json_view($object) {
+		header('Access-Control-Allow-Origin: *');  
+		header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
 		return response(json_encode($this->utf8ize($object)), 200)->header("Content-Type", "application/json")->header("Access-Control-Allow-Origin", "*")->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
 	}
 	
