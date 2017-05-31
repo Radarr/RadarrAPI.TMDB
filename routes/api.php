@@ -23,4 +23,4 @@ Route::get("/ping", "API\JSONController@ping");
 
 Route::get("/discovery/upcoming", "API\DiscoverController@upcoming");
 
-Route::get("/search/suggestions", array('middleware' => 'cors', "uses" => "API\SearchController@suggestions"));
+Route::get("/search/suggestions", "API\SearchController@suggestions");
