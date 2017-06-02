@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\Cache;
 use Helper;
 
 Relation::morphMap([
@@ -54,6 +55,19 @@ class Mapping extends Model
         $this->report_count = $this->report_count + $direction;
         $this->total_reports += 1;
         $this->save();
+        $id = $this->id;
+        $tmdbid = $this->tmdbid;
+        $imdbid = $this->imdbid;
+        $type = "title";
+
+        //Clear cache for this id, so new votes are correctly displayed
+        $keys = array("id-$id", "tmdbid-$tmdbid", "imdbid-$imdbid");
+        foreach ($keys as $key)
+        {
+            Cache::forget($key);
+            Cache::forget($key."-$type");
+        }
+
     }
 
 }

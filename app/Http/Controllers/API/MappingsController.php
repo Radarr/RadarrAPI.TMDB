@@ -48,7 +48,7 @@ class MappingsController extends JSONController
         $query["mapable_type"] = $type;
      }
 
-     $mappings = Cache::remember($key, Carbon::now()->addMinutes(1), function() use ($query) {
+     $mappings = Cache::remember($key, Carbon::now()->addMinutes(15), function() use ($query) {
        return Mapping::where($query)->get()->toJson();
      });
 
