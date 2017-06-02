@@ -29,6 +29,8 @@ class MappingsController extends JSONController
      $tmdbid = $request->query("tmdbid");
      $imdbid = $request->query("imdbid");
 
+     $type = $request->query("type");
+
      $key = "id-$id";
      $query = array("id" => $id);
 
@@ -38,6 +40,12 @@ class MappingsController extends JSONController
      } else if (isset($imdbid)) {
        $key = "imdbid-$imdbid";
        $query = array("imdbid" => $imdbid);
+     }
+
+     if (isset($type))
+     {
+        $key .= "-$type";
+        $query["mapable_type"] = $type;
      }
 
      $mappings = Cache::remember($key, Carbon::now()->addMinutes(1), function() use ($query) {
