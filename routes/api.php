@@ -35,4 +35,4 @@ Route::get("/imdb/top250", "API\IMDBController@top250");
 
 Route::get("/imdb/popular", "API\IMDBController@popular");
 
-Route::get("/imdb/list", "API\IMDBController@list");
+Route::get("/imdb/list", "API\IMDBController@imdb_list");
