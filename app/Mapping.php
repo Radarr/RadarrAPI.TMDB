@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Cache;
 use Helper;
+use MappingsCache;
 
 Relation::morphMap([
     'title' => 'App\TitleMapping',
@@ -31,11 +32,16 @@ class Mapping extends Model
         return $this->morphTo();
     }
 
-    public function jsonSerialize()
+    /*public function jsonSerialize()
     {
         $arr = $this->toArray();
         //var_dump($this->mappable());
         return array_merge( $this->mapable->toArray(), $arr);
+    }*/
+
+    public function toArray()
+    {
+        return array_merge($this->mapable->toArray(), parent::toArray());
     }
 
     public static function newMapping($values, $class)
@@ -60,14 +66,8 @@ class Mapping extends Model
         $imdbid = $this->imdbid;
         $type = "title";
 
-        //Clear cache for this id, so new votes are correctly displayed
-        $keys = array("id-$id", "tmdbid-$tmdbid", "imdbid-$imdbid");
-        foreach ($keys as $key)
-        {
-            Cache::forget($key);
-            Cache::forget($key."-$type");
-        }
-
+        //Update cache for this id, so new votes are correctly displayed
+        MappingsCache::updateMapping($this);
     }
 
 }

@@ -194,6 +194,7 @@ return [
 
     'aliases' => [
         'Helper' => App\Helpers\Helper::class,
+        'MappingsCache' => App\Helpers\MappingsCache::class,
         'App' => Illuminate\Support\Facades\App::class,
         'Artisan' => Illuminate\Support\Facades\Artisan::class,
         'Auth' => Illuminate\Support\Facades\Auth::class,

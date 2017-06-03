@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 use Helper;
+use MappingsCache;
 
 class MappingsController extends JSONController
 {
@@ -31,26 +32,22 @@ class MappingsController extends JSONController
 
      $type = $request->query("type");
 
-     $key = "id-$id";
      $query = array("id" => $id);
 
      if (isset($tmdbid)) {
-       $key = "tmdbid-$tmdbid";
        $query = array("tmdbid" => $tmdbid);
      } else if (isset($imdbid)) {
-       $key = "imdbid-$imdbid";
        $query = array("imdbid" => $imdbid);
      }
 
      if (isset($type))
      {
-        $key .= "-$type";
         $query["mapable_type"] = $type;
      }
 
-     $mappings = Cache::remember($key, Carbon::now()->addMinutes(15), function() use ($query) {
-       return Mapping::where($query)->get()->toJson();
-     });
+     $mappings = MappingsCache::rememberQuery($query);/*Cache::remember($key, Carbon::now()->addMinutes(15), function() use ($query) {
+       return Mapping::where($query)->get()->toArray();
+     });*/
 
 
 		 return $this->json_view($mappings);
