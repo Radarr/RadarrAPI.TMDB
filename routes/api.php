@@ -30,3 +30,9 @@ Route::get("/mappings/get", "API\MappingsController@get");
 Route::get("/mappings/add", "API\MappingsController@add");
 
 Route::get("/mappings/vote", "API\MappingsController@vote");
+
+Route::get("/imdb/top250", "API\IMDBController@top250");
+
+Route::get("/imdb/popular", "API\IMDBController@popular");
+
+Route::get("/imdb/list", "API\IMDBController@list");

@@ -2,8 +2,34 @@
 
 namespace App\Helpers;
 
+use App\Movie;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
+
 class Helper
 {
+
+  public static function get_from_imdb_py($verb, $var = "", $rememberMinutes = 60*5)
+  {
+      return Cache::remember("imdb.$verb.$var", Carbon::now()->addMinutes($rememberMinutes), function() use ($verb, $var){
+          $listIds = exec("python IMDBAPI.py $verb $var");
+          $exploded = explode(",", $listIds);
+          $orderedListIds = array();
+          foreach($exploded as $id) {
+              $orderedListIds[] = str_ireplace("'", "", $id);
+          }
+          $movies = Movie::whereIn("imdb_id", $orderedListIds)->get()->toArray();
+          $response = array();
+          foreach ($movies as $movie)
+          {
+              $index = array_search($movie["imdb_id"], $orderedListIds);
+              $response[$index] = $movie;
+          }
+          ksort($response);
+          return array_values($response);
+      });
+  }
+
   public static function clean_title($title) {
   		$title = strtolower($title);
   		$title = str_replace("ä", "ae", $title);

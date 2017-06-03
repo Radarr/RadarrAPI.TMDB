@@ -2,7 +2,7 @@ TMDBDUMP/*
 TMDBDUMP/** 
 peewee/* 
 peewee/** 
-IMDBAPI.py 
+IMDBAPI.py
 ini.json 
 **/IMDBAPI.py 
 *.log 
