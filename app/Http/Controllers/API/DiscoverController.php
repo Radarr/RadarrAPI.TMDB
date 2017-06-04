@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use App\User;
 use App\Movie;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cache;
 use Symfony\Component\HttpFoundation\Response;
 
 class DiscoverController extends JSONController
@@ -19,10 +20,12 @@ class DiscoverController extends JSONController
      */
 	 public function upcoming() {
 		 $resp = array();
-		 $resp = Movie::whereHas("release_dates", function($query) {
-			 $query->where("type", "in", "(4,5,6)");//->whereBetween("release_date", array(Carbon::now()->subWeek(), Carbon::now()->addWeeks(3)))->orderBy("release_date", "ASC");
-		 })->orderBy("popularity", "DESC")->take(3)->get();
-		 return $this->json_view($resp->toArray());
+		 $resp = Cache::remember("discovery.upcoming", Carbon::now()->addHours(12), function (){
+        return Movie::whereHas("release_dates", function($query) {
+   			 $query->whereIn("type", array(4,5,6))->whereBetween("release_date", array(Carbon::now()->subWeek(), Carbon::now()->addWeeks(3)))->orderBy("release_date", "ASC");
+   		 })->orderBy("popularity", "DESC")->get()->toArray();
+     });
+		 return $this->json_view($resp);
 	 }
 }
 
