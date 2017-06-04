@@ -30,8 +30,8 @@ class DiscoverController extends JSONController
 	 }
 
    public function popular() {
-      $movies = Cache::remember("discover.popular", new Carbon('tomorrow midnight'), function(){
-          return StevenLuMovie::all()->toArray();
+      $movies = Cache::remember("discovery.popular", new Carbon('tomorrow midnight'), function(){
+          return array_values(StevenLuMovie::all()->sortByDesc("TMDBMovie.popularity")->toArray());
       });
       return $this->json_view($movies);
    }
