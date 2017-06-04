@@ -31,6 +31,8 @@ class Movie extends Model
             $arr["physical_release"] = $physical_release->release_date;
             $arr["physical_release_note"] = $physical_release->note;
         }
+        $arr["genre_ids"] = explode(",", $this->genres);
+        unset($arr["genres"]);
         return $arr;
     }
 }
