@@ -26,8 +26,11 @@ class Movie extends Model
     {
         $arr = parent::toArray();
         $physical_release = $this->physical_release;
-        $arr["physical_release"] = $physical_release->release_date;
-        $arr["physical_release_note"] = $physical_release->note;
+        if ($physical_release != NULL)
+        {
+            $arr["physical_release"] = $physical_release->release_date;
+            $arr["physical_release_note"] = $physical_release->note;
+        }
         return $arr;
     }
 }

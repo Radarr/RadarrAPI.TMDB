@@ -18,6 +18,11 @@ class StevenLuMovie extends Model
 
     public function TMDBMovie()
     {
-        $this->hasOne("Movie", "imdb_id", "imdb_id");
+        return $this->hasOne("App\Movie", "imdb_id", "imdb_id");
+    }
+
+    public function toArray()
+    {
+        return $this->TMDBMovie->toArray();
     }
 }

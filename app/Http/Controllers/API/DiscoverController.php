@@ -6,6 +6,7 @@ use Carbon\Carbon;
 
 use App\User;
 use App\Movie;
+use App\StevenLuMovie;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,6 +28,17 @@ class DiscoverController extends JSONController
      });
 		 return $this->json_view($resp);
 	 }
+
+   public function popular() {
+      $movies = Cache::remember("discover.popular", new Carbon('tomorrow midnight'), function(){
+          return StevenLuMovie::all()->toArray();
+      });
+      return $this->json_view($movies);
+   }
+
+   public function recommendations(Request $request) {
+
+   }
 }
 
 ?>

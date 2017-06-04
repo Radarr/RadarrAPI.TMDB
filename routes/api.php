@@ -23,6 +23,8 @@ Route::get("/ping", "API\JSONController@ping");
 
 Route::get("/discovery/upcoming", "API\DiscoverController@upcoming");
 
+Route::get("/discovery/popular", "API\DiscoverController@popular");
+
 Route::get("/search/suggestions", "API\SearchController@suggestions");
 
 Route::get("/mappings/get", "API\MappingsController@get");
