@@ -17,8 +17,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get("/hello/{name?}", "API\TestJSONController@hello");
-
 Route::get("/ping", "API\JSONController@ping");
 
 Route::get("/discovery/upcoming", "API\DiscoverController@upcoming");

@@ -47,7 +47,11 @@ class DiscoverController extends JSONController
    public function recommendations(Request $request) {
       $ids = $request->input("tmdbIds");
       $ignoredIds = $request->input("ignoredIds");
-      $movies_db = DB::select("SELECT mo.id, mo.popularity, mo.imdb_id, mo.title, mo.overview, mo.vote_average, mo.vote_count, mo.tagline, mo.poster_path, mo.release_date, mo.release_year, mo.trailer_key, mo.trailer_site, mo.backdrop_path, mo.homepage, mo.runtime, mo.countO FROM ( SELECT m.*, r.recommended_id, r.tmdbid, r.id as rid, count(m.id) as countO FROM movies m, recommendations r WHERE m.id = r.recommended_id AND r.tmdbid in ($ids) AND r.recommended_id not in ($ids,$ignoredIds) GROUP BY m.id ) as mo;");
+      if ($ignoredIds != "")
+      {
+          $ignoredIds = ",".$ignoredIds;
+      }
+      $movies_db = DB::select("SELECT mo.id, mo.popularity, mo.imdb_id, mo.title, mo.overview, mo.vote_average, mo.vote_count, mo.tagline, mo.poster_path, mo.release_date, mo.release_year, mo.trailer_key, mo.trailer_site, mo.backdrop_path, mo.homepage, mo.runtime, mo.countO FROM ( SELECT m.*, r.recommended_id, r.tmdbid, r.id as rid, count(m.id) as countO FROM movies m, recommendations r WHERE m.id = r.recommended_id AND r.tmdbid in ($ids) AND r.recommended_id not in ($ids$ignoredIds) GROUP BY m.id ) as mo;");
       $movies = json_decode(json_encode($movies_db), true);
 
       $this->count_max = maximum($movies, "countO");
