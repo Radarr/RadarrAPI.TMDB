@@ -9,7 +9,10 @@ use App\Movie;
 use App\StevenLuMovie;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
+
 
 class DiscoverController extends JSONController
 {
@@ -36,9 +39,55 @@ class DiscoverController extends JSONController
       return $this->json_view($movies);
    }
 
-   public function recommendations(Request $request) {
 
+  protected $vote_max = 0;
+  protected $pop_max = 0;
+  protected $count_max = 0;
+
+   public function recommendations(Request $request) {
+      $ids = $request->input("tmdbIds");
+      $ignoredIds = $request->input("ignoredIds");
+      $movies_db = DB::select("SELECT mo.id, mo.popularity, mo.imdb_id, mo.title, mo.overview, mo.vote_average, mo.vote_count, mo.tagline, mo.poster_path, mo.release_date, mo.release_year, mo.trailer_key, mo.trailer_site, mo.backdrop_path, mo.homepage, mo.runtime, mo.countO FROM ( SELECT m.*, r.recommended_id, r.tmdbid, r.id as rid, count(m.id) as countO FROM movies m, recommendations r WHERE m.id = r.recommended_id AND r.tmdbid in ($ids) AND r.recommended_id not in ($ids,$ignoredIds) GROUP BY m.id ) as mo;");
+      $movies = json_decode(json_encode($movies_db), true);
+
+      $this->count_max = maximum($movies, "countO");
+      $this->pop_max = maximum($movies, "popularity");
+      $this->vote_max = maximum($movies, "vote_average");
+
+      usort($movies, array($this, "compare_score"));
+
+      $movies = array_slice($movies, 0, 30);
+
+      return $this->json_view($movies);
    }
+
+   function score ($elem)
+   {
+
+   		return (float)($elem["vote_average"]) / ($this->vote_max) + (float)($elem["popularity"]) / (2*$this->pop_max) + (float)($elem["countO"]) / (2*$this->count_max);
+   }
+
+   function compare_score ($a, $b) {
+
+     if ($this->score($a) > $this->score($b)) {
+       return -1;
+     } else {
+       return 1;
+     }
+   }
+}
+
+function maximum($arr, $key) {
+  $max = 0.0;
+
+  foreach ($arr as $elem) {
+    $val = $elem[$key];
+    if ((double)$val > $max) {
+      $max = $val;
+    }
+  }
+
+  return $max;
 }
 
 ?>

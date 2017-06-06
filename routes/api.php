@@ -25,6 +25,8 @@ Route::get("/discovery/upcoming", "API\DiscoverController@upcoming");
 
 Route::get("/discovery/popular", "API\DiscoverController@popular");
 
+Route::post("/discovery/recommendations", "API\DiscoverController@recommendations");
+
 Route::get("/search/suggestions", "API\SearchController@suggestions");
 
 Route::get("/mappings/get", "API\MappingsController@get");
