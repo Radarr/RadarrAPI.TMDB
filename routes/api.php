@@ -23,6 +23,12 @@ Route::get("/discovery/upcoming", "API\DiscoverController@upcoming");
 
 Route::get("/discovery/popular", "API\DiscoverController@popular");
 
+Route::get("/discovery/recommendations", "API\DiscoverController@recommendations");
+
+Route::post("/discovery/upcoming", "API\DiscoverController@upcoming");
+
+Route::post("/discovery/popular", "API\DiscoverController@popular");
+
 Route::post("/discovery/recommendations", "API\DiscoverController@recommendations");
 
 Route::get("/search/suggestions", "API\SearchController@suggestions");

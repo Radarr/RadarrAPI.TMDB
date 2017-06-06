@@ -147,4 +147,17 @@ class Helper
   	    return $string;
   	}
 
+    public static function generate_uuid_v4()
+    {
+        $hash = bin2hex(random_bytes(16));
+        $timeHi = hexdec(substr($hash, 12, 4)) & 0x0fff;
+        $timeHi &= ~(0xf000);
+        $timeHi |= 4 << 12;
+        $clockSeqHi = hexdec(substr($hash, 16, 2)) & 0x3f;
+        $clockSeqHi &= ~(0xc0);
+        $clockSeqHi |= 0x80;
+        $params = [substr($hash, 0, 8), substr($hash, 8, 4), sprintf('%04x', $timeHi), sprintf('%02x', $clockSeqHi), substr($hash, 18, 2), substr($hash, 20, 12)];
+        return vsprintf('%08s-%04s-%04s-%02s%02s-%012s', $params);
+    }
+
 }
