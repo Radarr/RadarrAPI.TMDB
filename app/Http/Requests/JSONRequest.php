@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Illuminate\Support\Facades\Log;
 
 use App\Helpers\Helper;
 
@@ -34,11 +35,12 @@ class JSONRequest extends FormRequest
           {
               $new_error = array();
               $new_error["id"] = Helper::generate_uuid_v4();
-              $new_error["status"] = 400;
-              $new_error["title"] = "Bad Request! Parameter {$key} has one or more errors.";
+              $new_error["status"] = 422;
+              $new_error["title"] = "Unprocessable Entity! Parameter {$key} has one or more errors.";
               $new_error["detail"] = "The following errors happened while processing the request parameter $key: ".implode(" ", $error);
               $json_errors[] = $new_error;
           }
+          Log::warning("Unprocessable Entity (422)!", array("errors" => $json_errors, "identification" => array("id" => $json_errors[0]["id"])));
           return new JsonResponse(array("errors" => $json_errors), 422);
         }
         return $this->redirector->to($this->getRedirectUrl())

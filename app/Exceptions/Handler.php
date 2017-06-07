@@ -6,9 +6,14 @@ use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use GrahamCampbell\Exceptions\NewExceptionHandler;
+//use GrahamCampbell\Exceptions\ExceptionIdentifier;
+//use GrahamCampbell\Exceptions\ExceptionHandlerTrait;
+use Illuminate\Support\Facades\Log;
+use Psr\Log\LoggerInterface;
 
 class Handler extends NewExceptionHandler
 {
+    //use \GrahamCampbell\Exceptions\ExceptionHandlerTrait;
     /**
      * A list of the exception types that should not be reported.
      *
@@ -17,7 +22,7 @@ class Handler extends NewExceptionHandler
     protected $dontReport = [
         \Illuminate\Auth\AuthenticationException::class,
         \Illuminate\Auth\Access\AuthorizationException::class,
-        \Symfony\Component\HttpKernel\Exception\HttpException::class,
+        //\Symfony\Component\HttpKernel\Exception\HttpException::class,
         \Illuminate\Database\Eloquent\ModelNotFoundException::class,
         \Illuminate\Session\TokenMismatchException::class,
         \Illuminate\Validation\ValidationException::class,
@@ -33,6 +38,7 @@ class Handler extends NewExceptionHandler
      */
     public function report(Exception $exception)
     {
+        //Log::error($exception, ["RayID" => "123"]);
         parent::report($exception);
     }
 
