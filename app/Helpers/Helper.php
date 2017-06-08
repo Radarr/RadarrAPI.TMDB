@@ -14,6 +14,7 @@ class Helper
   {
       return Cache::remember("imdb.$verb.$var", Carbon::now()->addMinutes($rememberMinutes), function() use ($verb, $var){
           $listIds = exec("python IMDBAPI.py $verb $var");
+          Log::error("Result from IMDB script: ", $listIds);
           Log::info("Result from IMDB script: $listIds");
           $exploded = explode(",", $listIds);
           $orderedListIds = array();
