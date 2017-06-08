@@ -5,6 +5,7 @@ namespace App\Helpers;
 use App\Movie;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class Helper
 {
@@ -13,6 +14,7 @@ class Helper
   {
       return Cache::remember("imdb.$verb.$var", Carbon::now()->addMinutes($rememberMinutes), function() use ($verb, $var){
           $listIds = exec("python IMDBAPI.py $verb $var");
+          Log::info("Result from IMDB script: $listIds");
           $exploded = explode(",", $listIds);
           $orderedListIds = array();
           foreach($exploded as $id) {
