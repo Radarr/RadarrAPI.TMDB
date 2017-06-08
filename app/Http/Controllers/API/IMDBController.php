@@ -36,7 +36,7 @@ class IMDBController extends JSONController
    }
 
    public function user_list(IMDBListRequest $request) {
-     $movies = Helper::get_from_imdb_py("list", $request->query("listId"), Carbon::now()->addMinutes(5));
+     $movies = Helper::get_from_imdb_py("list", $request->query("listId"), 5);
 		 return $this->json_view($movies);
    }
 }
