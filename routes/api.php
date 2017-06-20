@@ -44,3 +44,5 @@ Route::get("/imdb/top250", "API\IMDBController@top250");
 Route::get("/imdb/popular", "API\IMDBController@popular");
 
 Route::get("/imdb/list", "API\IMDBController@user_list");
+
+Route::get("/maintenance/activate", "DBMaintenanceController@activate");

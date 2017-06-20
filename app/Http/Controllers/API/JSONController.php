@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\User;
 use App\Http\Controllers\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class JSONController extends Controller
 {
@@ -37,7 +38,7 @@ class JSONController extends Controller
 	}
 
 	public function ping() {
-		return $this->json_view(array("message" => "pong"));
+		return response()->json(array("message" => "pong"));
 	}
 }
 

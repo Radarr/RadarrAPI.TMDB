@@ -12,8 +12,9 @@ class Helper
 
   public static function get_from_imdb_py($verb, $var = "", $rememberMinutes = 60*5)
   {
-      Log::info("Calling python IMDBAPI.py $verb $var");
+      Cache::flush();
       return Cache::remember("imdb.$verb.$var", Carbon::now()->addMinutes($rememberMinutes), function() use ($verb, $var){
+          Log::info("Calling python IMDBAPI.py $verb $var");
           $listIds = exec("python IMDBAPI.py $verb $var");
           Log::info("Result from IMDB script: $listIds");
           $exploded = explode(",", $listIds);
@@ -21,14 +22,23 @@ class Helper
           foreach($exploded as $id) {
               $orderedListIds[] = str_ireplace("'", "", $id);
           }
+          $count = count($orderedListIds);
+          Log::info("IMDB Movies Count: $count");
           $movies = Movie::whereIn("imdb_id", $orderedListIds)->get()->toArray();
           $response = array();
           foreach ($movies as $movie)
           {
               $index = array_search($movie["imdb_id"], $orderedListIds);
+              unset($orderedListIds[$index]);
               $response[$index] = $movie;
           }
           ksort($response);
+
+          $notFound = count($orderedListIds);
+          if ($notFound > 0)
+          {
+              Log::warning("Could not find $notFound movies! IMDBIDS are: ", array("missing_imdb_ids" => $orderedListIds));
+          }
           return array_values($response);
       });
   }

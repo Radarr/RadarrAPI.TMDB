@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'mysql'),
+    'default' => env('DB_CONNECTION', 'tmdb_mysql'),
 
     /*
     |--------------------------------------------------------------------------
@@ -39,7 +39,7 @@ return [
             'prefix' => '',
         ],
 
-        'mysql' => [
+        'tmdb_mysql' => [
             'driver' => 'mysql',
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
@@ -67,6 +67,21 @@ return [
           'prefix' => '',
           'strict' => true,
           'engine' => null,
+        ],
+
+        'maintenance_mysql' => [
+            'driver' => 'mysql',
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DATABASE', 'forge'),
+            'username' => env('DB_USERNAME_ROOT', 'forge'),
+            'password' => env('DB_PASSWORD_ROOT', ''),
+            'unix_socket' => env('DB_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => false,
+            'engine' => null,
         ],
 
         'pgsql' => [
@@ -131,5 +146,18 @@ return [
         ],
 
     ],
+
+    'tmdb_maintenance' => [
+        'db_connection' => 'maintenance_mysql',
+        'from_database' => env('DB_DATABASE', 'forge'),
+        'to_database' => env('DB_DATABASE_BACKUP', 'forge'),
+        'affected_connections' => [
+            'tmdb_mysql'
+        ],
+        'tables' => 'all',
+        'tables_before' => [
+            'movies'
+        ]
+    ]
 
 ];

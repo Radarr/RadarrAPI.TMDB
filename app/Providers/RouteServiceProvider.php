@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use App\Http\Middleware\CheckDBMaint;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -65,7 +66,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapApiRoutes()
     {
-        Route::middleware('api')
+        Route::middleware('api', CheckDBMaint::class)
              ->namespace($this->namespace)
              ->group(base_path('routes/api.php'));
     }

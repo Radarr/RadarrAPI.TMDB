@@ -41,7 +41,7 @@ class JSONRequest extends FormRequest
               $json_errors[] = $new_error;
           }
           Log::warning("Unprocessable Entity (422)!", array("errors" => $json_errors, "identification" => array("id" => $json_errors[0]["id"])));
-          return new JsonResponse(array("errors" => $json_errors), 422);
+          return response()->json(array("errors" => $json_errors), 422);
         }
         return $this->redirector->to($this->getRedirectUrl())
                                         ->withInput($this->except($this->dontFlash))

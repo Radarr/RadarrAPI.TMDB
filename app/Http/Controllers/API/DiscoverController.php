@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 
@@ -29,14 +30,14 @@ class DiscoverController extends JSONController
    			 $query->whereIn("type", array(4,5,6))->whereBetween("release_date", array(Carbon::now()->subWeek(), Carbon::now()->addWeeks(3)))->orderBy("release_date", "ASC");
    		 })->orderBy("popularity", "DESC")->get()->toArray();
      });
-		 return $this->json_view($resp);
+		 return response()->json($resp);
 	 }
 
    public function popular() {
       $movies = Cache::remember("discovery.popular", new Carbon('tomorrow midnight'), function(){
           return array_values(StevenLuMovie::all()->sortByDesc("TMDBMovie.popularity")->toArray());
       });
-      return $this->json_view($movies);
+      return response()->json($movies);
    }
 
 
@@ -62,7 +63,7 @@ class DiscoverController extends JSONController
 
       $movies = array_slice($movies, 0, 30);
 
-      return $this->json_view($movies);
+      return response()->json($movies);
    }
 
    function score ($elem)

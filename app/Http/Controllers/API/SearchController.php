@@ -6,6 +6,7 @@ use App\Movie;
 use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
@@ -26,7 +27,7 @@ class SearchController extends JSONController
 		 $movies = Cache::remember("suggestions.$title", new Carbon('tomorrow midnight'), function() use ($title) {
 			 return Movie::select("id", "title as name", "release_year", "poster_path")->where("clean_title", "LIKE", "%".$title."%")->orderBy("popularity", "desc")->take(5)->get();
 		 });//DB::statement("SELECT m.id, m.title as name, m.release_year, m.poster_path FROM movies m WHERE m.clean_title LIKE '%$title%' ORDER BY m.popularity DESC LIMIT 5");
-		 return $this->json_view($movies->toArray());
+		 return response()->json($movies->toArray());
 	 }
 }
 

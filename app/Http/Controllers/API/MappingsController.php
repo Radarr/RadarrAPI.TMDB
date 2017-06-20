@@ -11,6 +11,7 @@ use App\TitleMapping;
 use App\YearMapping;
 use App\Http\Controllers\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
@@ -50,7 +51,7 @@ class MappingsController extends JSONController
      });*/
 
 
-		 return $this->json_view($mappings);
+		 return response()->json($mappings);
 	 }
 
    public function add(Request $request) {
@@ -94,7 +95,7 @@ class MappingsController extends JSONController
           }
       }
 
-      return $this->json_view($new_mapping);
+      return response()->json($new_mapping);
    }
 
    public function vote(Request $request) {
@@ -107,7 +108,7 @@ class MappingsController extends JSONController
       $mapping = Mapping::find($id);
       $mapping->vote($direction);
 
-      return $this->json_view($mapping);
+      return response()->json($mapping);
    }
 }
 
