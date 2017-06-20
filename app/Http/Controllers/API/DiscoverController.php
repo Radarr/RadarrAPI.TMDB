@@ -1,0 +1,98 @@
+<?php
+
+namespace App\Http\Controllers\API;
+
+use Carbon\Carbon;
+
+use App\User;
+use App\Movie;
+use App\StevenLuMovie;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+
+
+class DiscoverController extends JSONController
+{
+    /**
+     * Returns a json string for api usage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+	 public function upcoming() {
+		 $resp = array();
+		 $resp = Cache::remember("discovery.upcoming", Carbon::now()->addHours(12), function (){
+        return Movie::whereHas("release_dates", function($query) {
+   			 $query->whereIn("type", array(4,5,6))->whereBetween("release_date", array(Carbon::now()->subWeek(), Carbon::now()->addWeeks(3)))->orderBy("release_date", "ASC");
+   		 })->orderBy("popularity", "DESC")->get()->toArray();
+     });
+		 return response()->json($resp);
+	 }
+
+   public function popular() {
+      $movies = Cache::remember("discovery.popular", new Carbon('tomorrow midnight'), function(){
+          return array_values(StevenLuMovie::all()->sortByDesc("TMDBMovie.popularity")->toArray());
+      });
+      return response()->json($movies);
+   }
+
+
+  protected $vote_max = 0;
+  protected $pop_max = 0;
+  protected $count_max = 0;
+
+   public function recommendations(Request $request) {
+      $ids = $request->input("tmdbIds");
+      $ignoredIds = $request->input("ignoredIds");
+      if ($ignoredIds != "")
+      {
+          $ignoredIds = ",".$ignoredIds;
+      }
+      $movies_db = DB::select("SELECT mo.id, mo.popularity, mo.imdb_id, mo.title, mo.overview, mo.vote_average, mo.vote_count, mo.tagline, mo.poster_path, mo.release_date, mo.release_year, mo.trailer_key, mo.trailer_site, mo.backdrop_path, mo.homepage, mo.runtime, mo.countO FROM ( SELECT m.*, r.recommended_id, r.tmdbid, r.id as rid, count(m.id) as countO FROM movies m, recommendations r WHERE m.id = r.recommended_id AND r.tmdbid in ($ids) AND r.recommended_id not in ($ids$ignoredIds) GROUP BY m.id ) as mo;");
+      $movies = json_decode(json_encode($movies_db), true);
+
+      $this->count_max = maximum($movies, "countO");
+      $this->pop_max = maximum($movies, "popularity");
+      $this->vote_max = maximum($movies, "vote_average");
+
+      usort($movies, array($this, "compare_score"));
+
+      $movies = array_slice($movies, 0, 30);
+
+      return response()->json($movies);
+   }
+
+   function score ($elem)
+   {
+
+   		return (float)($elem["vote_average"]) / ($this->vote_max) + (float)($elem["popularity"]) / (2*$this->pop_max) + (float)($elem["countO"]) / (2*$this->count_max);
+   }
+
+   function compare_score ($a, $b) {
+
+     if ($this->score($a) > $this->score($b)) {
+       return -1;
+     } else {
+       return 1;
+     }
+   }
+}
+
+function maximum($arr, $key) {
+  $max = 0.0;
+
+  foreach ($arr as $elem) {
+    $val = $elem[$key];
+    if ((double)$val > $max) {
+      $max = $val;
+    }
+  }
+
+  return $max;
+}
+
+?>

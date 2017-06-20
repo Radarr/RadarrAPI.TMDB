@@ -1,4 +1,0 @@
-<Files "ini.json">
-Order Allow,Deny
-Deny from all
-</Files>
