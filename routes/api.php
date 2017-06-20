@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,11 +34,14 @@ Route::post("/discovery/recommendations", "API\DiscoverController@recommendation
 
 Route::get("/search/suggestions", "API\SearchController@suggestions");
 
-Route::get("/mappings/get", "API\MappingsController@get");
+if (Config::get("app.mappings.enabled") === true)
+{
+    Route::get("/mappings/get", "API\MappingsController@get");
 
-Route::get("/mappings/add", "API\MappingsController@add");
+    Route::get("/mappings/add", "API\MappingsController@add");
 
-Route::get("/mappings/vote", "API\MappingsController@vote");
+    Route::get("/mappings/vote", "API\MappingsController@vote");
+}
 
 Route::get("/imdb/top250", "API\IMDBController@top250");
 
@@ -45,4 +49,4 @@ Route::get("/imdb/popular", "API\IMDBController@popular");
 
 Route::get("/imdb/list", "API\IMDBController@user_list");
 
-Route::get("/maintenance/activate", "DBMaintenanceController@activate");
+//Route::get("/maintenance/activate", "DBMaintenanceController@activate");
