@@ -20,6 +20,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::get("/ping", "API\JSONController@ping");
 
+Route::get("/hello", "API\TestJSONController@hello");
+
+
 Route::get("/discovery/upcoming", "API\DiscoverController@upcoming");
 
 Route::get("/discovery/popular", "API\DiscoverController@popular");

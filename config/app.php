@@ -107,6 +107,9 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
+    'imdb_key' => env('IMDB_API_KEY'),
+    'imdb_secret' => env('IMDB_API_SECRET'),
+
     /*
     |--------------------------------------------------------------------------
     | Logging Configuration
