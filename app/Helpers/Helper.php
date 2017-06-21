@@ -32,7 +32,15 @@ class Helper
 
           $movies = DB::select("SELECT sub.* FROM (SELECT m.*, r.release_date as physical_release, r.note as physical_release_note, r.type from `movies` m LEFT JOIN release_dates r ON r.tmdbid = m.id AND r.type in (4,5,6) where m.`imdb_id` in ('$idStr') ORDER BY r.release_date) sub GROUP BY sub.id ORDER BY FIELD(imdb_id, '$idStr');");
 
-          return $movies;
+          $with_genres = array();
+
+          foreach ($movies as $movie)
+          {
+              $movie->genres = explode(",", $movie->genres);
+              $with_genres[] = $movie;
+          }
+
+          return $with_genres;
       });
   }
 
