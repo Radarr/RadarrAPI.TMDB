@@ -51,7 +51,7 @@ class MappingsController extends JSONController
          });*/
 
 
-		 return response()->json($mappings)->header("Access-Control-Allow-Origin: *");
+		 return response()->json($mappings)->header("Access-Control-Allow-Origin", "*");
 	 }
 
    public function add(Request $request) {
@@ -95,7 +95,7 @@ class MappingsController extends JSONController
           }
       }
 
-      return response()->json($new_mapping)->header("Access-Control-Allow-Origin: *");
+      return response()->json($new_mapping)->header("Access-Control-Allow-Origin", "*");
    }
 
    public function vote(Request $request) {
@@ -108,7 +108,7 @@ class MappingsController extends JSONController
       $mapping = Mapping::find($id);
       $mapping->vote($direction);
 
-      return response()->json($mapping)->header("Access-Control-Allow-Origin: *");
+      return response()->json($mapping)->header("Access-Control-Allow-Origin", "*");
    }
 }
 
