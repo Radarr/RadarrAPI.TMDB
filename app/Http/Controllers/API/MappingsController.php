@@ -22,6 +22,8 @@ use Helper;
 use MappingsCache;
 use App\Event;
 use App\MappingMovie;
+use App\Http\Requests;
+use App\Http\Requests\MappingAddRequest;
 
 
 class MappingsController extends JSONController
@@ -37,6 +39,11 @@ class MappingsController extends JSONController
 
          $mapping = Mapping::find($id);
 
+         if ($mapping == null)
+         {
+             abort(404, "Mapping with id $id was not found. Maybe it was removed?");
+         }
+
 		 return response()->json($mapping)->header("Access-Control-Allow-Origin", "*");
 	 }
 
@@ -44,6 +51,12 @@ class MappingsController extends JSONController
      {
          $tmdbid = $request->query("tmdbid");
          $movie = MappingMovie::find($tmdbid);
+
+         if ($movie == null)
+         {
+             abort(404, "Movie with tmdbid $tmdbid was not found. Either it does not exist or no mappings have been added yet");
+         }
+
          $type = $request->query("type");
 
          $titles = [];
@@ -64,14 +77,19 @@ class MappingsController extends JSONController
          return response()->json($movie)->header("Access-Control-Allow-Origin", "*");
      }
 
-   public function add(Request $request) {
+   public function add(MappingAddRequest $request) {
         $tmdbid = $request->query("tmdbid");
         $type = $request->query("type");
 
         //Ensure that the movie is in our mapping database!
         if (!MappingMovie::find($tmdbid))
         {
-            Movie::find($tmdbid)->createMappingMovie()->save();
+            $movie = Movie::find($tmdbid);
+            if ($movie == null)
+            {
+                abort(422, "The movie with the given tmdbid could not be found!");
+            }
+            $movie->createMappingMovie()->save();
         }
 
         $existing = false;
@@ -121,11 +139,22 @@ class MappingsController extends JSONController
    public function vote(Request $request) {
       $id = $request->query("id");
       $direction = $request->query("direction");
-      if (!isset($direction))
+      if (!isset($direction) || $direction > 1)
       {
           $direction = 1;
       }
+
+      if ($direction < 1)
+      {
+          $direction = -1;
+      }
       $mapping = Mapping::find($id);
+
+      if ($mapping == null)
+      {
+          abort(404,"Mapping with id $id was not found. Maybe it was removed?");
+      }
+
       $mapping->vote($direction);
 
       return response()->json($mapping)->header("Access-Control-Allow-Origin", "*");
