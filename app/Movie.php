@@ -35,4 +35,9 @@ class Movie extends Model
         unset($arr["genres"]);
         return $arr;
     }
+
+    public function createMappingMovie() {
+        return new MappingMovie(["id" => $this->id, "title" => $this->title, "imdb_id" => $this->imdb_id]);
+    }
 }
+

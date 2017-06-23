@@ -44,6 +44,10 @@ if (Config::get("app.mappings.enabled") === true)
     Route::get("/mappings/add", "API\MappingsController@add");
 
     Route::get("/mappings/vote", "API\MappingsController@vote");
+
+    Route::get("/mappings/latest", "API\MappingsController@latest");
+
+    Route::get("/mappings/find", "API\MappingsController@find");
 }
 
 Route::get("/imdb/top250", "API\IMDBController@top250");
