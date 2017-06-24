@@ -56,9 +56,9 @@ class Mapping extends Model
         $arr["info"] = $this->info->toArray();
         $total = $this->vote_count;
 
-        $random_variation = round($total / 10.0);
+        //$random_variation = round($total / 10.0);
 
-        $variation = random_int(-$random_variation, $random_variation);
+        $variation = 0;//random_int(-$random_variation, $random_variation);
         $arr["votes"] += $variation;
         $arr["vote_count"] += abs($variation);
         return $arr;
