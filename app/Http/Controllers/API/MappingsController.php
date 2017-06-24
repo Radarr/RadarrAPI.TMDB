@@ -24,6 +24,8 @@ use App\Event;
 use App\MappingMovie;
 use App\Http\Requests;
 use App\Http\Requests\MappingAddRequest;
+use App\Http\Requests\MappingFindRequest;
+use App\Http\Requests\MappingGetRequest;
 
 
 class MappingsController extends JSONController
@@ -34,7 +36,7 @@ class MappingsController extends JSONController
      * @param  int  $id
      * @return Response
      */
-	 public function get(Request $request) {
+	 public function get(MappingGetRequest $request) {
          $id = $request->query("id");
 
          $mapping = Mapping::find($id);
@@ -47,14 +49,14 @@ class MappingsController extends JSONController
 		 return response()->json($mapping)->header("Access-Control-Allow-Origin", "*");
 	 }
 
-	 public function find(Request $request)
+	 public function find(MappingFindRequest $request)
      {
          $tmdbid = $request->query("tmdbid");
          $movie = MappingMovie::find($tmdbid);
 
          if ($movie == null)
          {
-             abort(404, "Movie with tmdbid $tmdbid was not found. Either it does not exist or no mappings have been added yet");
+             abort(404, "Movie with tmdbid $tmdbid was not found. Either it does not exist or no mappings have been added yet.");
          }
 
          $type = $request->query("type");
@@ -136,7 +138,7 @@ class MappingsController extends JSONController
         return response()->json($mapping)->header("Access-Control-Allow-Origin", "*");
    }
 
-   public function vote(Request $request) {
+   public function vote(MappingGetRequest $request) {
       $id = $request->query("id");
       $direction = $request->query("direction");
       if (!isset($direction) || $direction > 1)

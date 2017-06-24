@@ -69,3 +69,98 @@ class MappingAddRequest extends JSONRequest
     }
 
 }
+
+class MappingFindRequest extends JSONRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        $arr = [
+            'tmdbid' => array(
+                "required",
+                "regex:/^\d+$/"
+            ),
+            'type' => array(
+                "sometimes",
+                "required",
+                Rule::in(['title', 'year', 'all']),
+            )
+        ];
+
+        return $arr;
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'tmdbid.required' => 'A tmdbid to find mappings by is required.',
+            'tmdbid.regex'  => 'The format of the tmdbid given is invalid!',
+            "type.required" => "The type of mappings to return is required.",
+            "type.in" => "The type of mapping has to be on of 'title', 'year' or 'all'.",
+        ];
+    }
+
+}
+
+class MappingGetRequest extends JSONRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        $arr = [
+            'id' => array(
+                "required",
+                "regex:/^\d+$/"
+            )
+        ];
+
+        return $arr;
+    }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'id.required' => 'The id of the mapping is required.',
+            'id.regex'  => 'The format of the id given is invalid!'
+        ];
+    }
+
+}
