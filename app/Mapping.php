@@ -78,6 +78,11 @@ class Mapping extends Model
 
     public function vote($direction = 1)
     {
+        if ($this->locked)
+        {
+            return;
+        }
+        
         $ip = md5($_SERVER['REMOTE_ADDR']);
         if (Event::whereIn("type", [EventType::AddedMapping, EventType::ApproveMapping, EventType::DisapproveMapping])->where("mappings_id", "=", $this->id)->where("ip", "=", $ip)->whereBetween("date", array(Carbon::now()->addDays(-1), Carbon::now()))->first())
         {
