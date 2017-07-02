@@ -28,7 +28,7 @@ class DiscoverController extends JSONController
 		 $resp = Cache::remember("discovery.upcoming", Carbon::now()->addHours(12), function (){
         return Movie::whereHas("release_dates", function($query) {
    			 $query->whereIn("type", array(4,5,6))->whereBetween("release_date", array(Carbon::now()->subWeek(), Carbon::now()->addWeeks(3)))->orderBy("release_date", "ASC");
-   		 })->orderBy("popularity", "DESC")->get()->toArray();
+   		 })->where("adult", "=", "0")->orderBy("popularity", "DESC")->get()->toArray();
      });
 		 return response()->json($resp);
 	 }
@@ -57,7 +57,7 @@ class DiscoverController extends JSONController
       {
           abort(422, "Please add some movies before using our recommendation engine :)");
       }
-      $movies_db = DB::select("SELECT mo.id, mo.popularity, mo.imdb_id, mo.title, mo.overview, mo.vote_average, mo.vote_count, mo.tagline, mo.poster_path, mo.release_date, mo.release_year, mo.trailer_key, mo.trailer_site, mo.backdrop_path, mo.homepage, mo.runtime, mo.countO FROM ( SELECT m.*, r.recommended_id, r.tmdbid, r.id as rid, count(m.id) as countO FROM movies m, recommendations r WHERE m.id = r.recommended_id AND r.tmdbid in ($ids) AND r.recommended_id not in ($ids$ignoredIds) GROUP BY m.id ) as mo;");
+      $movies_db = DB::select("SELECT mo.id, mo.popularity, mo.imdb_id, mo.title, mo.overview, mo.vote_average, mo.vote_count, mo.tagline, mo.poster_path, mo.release_date, mo.release_year, mo.trailer_key, mo.trailer_site, mo.backdrop_path, mo.homepage, mo.runtime, mo.countO FROM ( SELECT m.*, r.recommended_id, r.tmdbid, r.id as rid, count(m.id) as countO FROM movies m, recommendations r WHERE m.id = r.recommended_id AND r.tmdbid in ($ids) AND r.recommended_id not in ($ids$ignoredIds) AND m.adult = 0 GROUP BY m.id ) as mo;");
       $movies = json_decode(json_encode($movies_db), true);
 
       $this->count_max = maximum($movies, "countO");

@@ -14,6 +14,10 @@ class Movie extends Model
      */
     public $timestamps = false;
 
+    protected $casts = [
+        "adult" => "boolean",
+    ];
+
     public function release_dates() {
 	    return $this->hasMany("App\ReleaseDate", "tmdbid", "id");
     }
