@@ -57,7 +57,7 @@ class DiscoverController extends JSONController
       {
           abort(422, "Please add some movies before using our recommendation engine :)");
       }
-      $movies_db = DB::select("SELECT mo.id, mo.popularity, mo.imdb_id, mo.title, mo.overview, mo.vote_average, mo.vote_count, mo.tagline, mo.poster_path, mo.release_date, mo.release_year, mo.trailer_key, mo.trailer_site, mo.backdrop_path, mo.homepage, mo.runtime, mo.countO FROM ( SELECT m.*, r.recommended_id, r.tmdbid, r.id as rid, count(m.id) as countO FROM movies m, recommendations r WHERE m.id = r.recommended_id AND r.tmdbid in ($ids) AND r.recommended_id not in ($ids$ignoredIds) AND m.adult = 0 GROUP BY m.id ) as mo;");
+      $movies_db = DB::select("SELECT mo.id, mo.popularity, mo.imdb_id, mo.title, mo.overview, mo.vote_average, mo.vote_count, mo.tagline, mo.poster_path, mo.release_date, mo.release_year, mo.trailer_key, mo.trailer_site, mo.backdrop_path, mo.homepage, mo.runtime, mo.countO, mo.genres, mo.runtime, mo.adult FROM ( SELECT m.*, r.recommended_id, r.tmdbid, r.id as rid, count(m.id) as countO FROM movies m, recommendations r WHERE m.id = r.recommended_id AND r.tmdbid in ($ids) AND r.recommended_id not in ($ids$ignoredIds) AND m.adult = 0 GROUP BY m.id ) as mo;");
       $movies = json_decode(json_encode($movies_db), true);
 
       $this->count_max = maximum($movies, "countO");
@@ -67,8 +67,17 @@ class DiscoverController extends JSONController
       usort($movies, array($this, "compare_score"));
 
       $movies = array_slice($movies, 0, 30);
+      $resp = [];
 
-      return response()->json($movies);
+      foreach ($movies as $movie) {
+          unset($movie["countO"]);
+          $movie["genres"] = explode(",", $movie["genres"]);
+          $movie["adult"] = $movie["adult"] == 1;
+          $resp[] = $movie;
+      }
+
+
+      return response()->json($resp);
    }
 
    function score ($elem)

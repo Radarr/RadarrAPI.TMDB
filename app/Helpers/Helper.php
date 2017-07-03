@@ -37,6 +37,8 @@ class Helper
           foreach ($movies as $movie)
           {
               $movie->genres = explode(",", $movie->genres);
+              $movie->adult = $movie->adult == 1;
+              unset($movie->type);
               $with_genres[] = $movie;
           }
 
