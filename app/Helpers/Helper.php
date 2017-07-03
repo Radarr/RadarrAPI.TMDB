@@ -6,40 +6,43 @@ use App\Movie;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+
 
 class Helper
 {
 
-  public static function get_from_imdb_py($verb, $var = "", $rememberMinutes = 60*5)
+  public static function get_from_imdb_py($path, $selection, $rememberMinutes = 60*5)
   {
-      Cache::flush();
-      return Cache::remember("imdb.$verb.$var", Carbon::now()->addMinutes($rememberMinutes), function() use ($verb, $var){
-          Log::info("Calling python IMDBAPI.py $verb $var");
-          $listIds = exec("python IMDBAPI.py $verb $var");
-          Log::info("Result from IMDB script: $listIds");
-          $exploded = explode(",", $listIds);
-          $orderedListIds = array();
-          foreach($exploded as $id) {
-              $orderedListIds[] = str_ireplace("'", "", $id);
+      //Cache::flush();
+      return Cache::remember("imdb.$path", Carbon::now()->addMinutes($rememberMinutes), function() use ($path, $selection){
+          Log::info("Starting up imdb api");
+          $resp = IMDBAPI::shared()->getJSON($path);
+          //dd($resp);
+          $ids = resolveMany($resp, $selection);
+
+          $fullIds = array();
+
+          foreach ($ids as $id)
+          {
+              $fullIds[] = rtrim(str_ireplace("/title/", "", $id), "/");
           }
-          $count = count($orderedListIds);
-          Log::info("IMDB Movies Count: $count");
-          $movies = Movie::whereIn("imdb_id", $orderedListIds)->get()->toArray();
-          $response = array();
+
+          $idStr = join("','", $fullIds);
+
+          $movies = DB::select("SELECT sub.* FROM (SELECT m.*, r.release_date as physical_release, r.note as physical_release_note, r.type from `movies` m LEFT JOIN release_dates r ON r.tmdbid = m.id AND r.type in (4,5,6) where m.`imdb_id` in ('$idStr') ORDER BY r.release_date) sub GROUP BY sub.id ORDER BY FIELD(imdb_id, '$idStr');");
+
+          $with_genres = array();
+
           foreach ($movies as $movie)
           {
-              $index = array_search($movie["imdb_id"], $orderedListIds);
-              unset($orderedListIds[$index]);
-              $response[$index] = $movie;
+              $movie->genres = explode(",", $movie->genres);
+              $movie->adult = $movie->adult == 1;
+              unset($movie->type);
+              $with_genres[] = $movie;
           }
-          ksort($response);
 
-          $notFound = count($orderedListIds);
-          if ($notFound > 0)
-          {
-              Log::warning("Could not find $notFound movies! IMDBIDS are: ", array("missing_imdb_ids" => $orderedListIds));
-          }
-          return array_values($response);
+          return $with_genres;
       });
   }
 
@@ -174,3 +177,5 @@ class Helper
     }
 
 }
+
+

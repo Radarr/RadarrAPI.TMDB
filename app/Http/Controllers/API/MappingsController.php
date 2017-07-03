@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\API;
 
+use App\EventType;
+use App\TitleInfo;
+use App\YearInfo;
 use Carbon\Carbon;
 
 use App\User;
@@ -17,6 +20,13 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 use Helper;
 use MappingsCache;
+use App\Event;
+use App\MappingMovie;
+use App\Http\Requests;
+use App\Http\Requests\MappingAddRequest;
+use App\Http\Requests\MappingFindRequest;
+use App\Http\Requests\MappingGetRequest;
+
 
 class MappingsController extends JSONController
 {
@@ -26,89 +36,138 @@ class MappingsController extends JSONController
      * @param  int  $id
      * @return Response
      */
-	 public function get(Request $request) {
-     $id = $request->query("id");
-     $tmdbid = $request->query("tmdbid");
-     $imdbid = $request->query("imdbid");
+	 public function get(MappingGetRequest $request) {
+         $id = $request->query("id");
 
-     $type = $request->query("type");
+         $mapping = Mapping::find($id);
 
-     $query = array("id" => $id);
+         if ($mapping == null)
+         {
+             abort(404, "Mapping with id $id was not found. Maybe it was removed?");
+         }
 
-     if (isset($tmdbid)) {
-       $query = array("tmdbid" => $tmdbid);
-     } else if (isset($imdbid)) {
-       $query = array("imdbid" => $imdbid);
-     }
-
-     if (isset($type))
-     {
-        $query["mapable_type"] = $type;
-     }
-
-     $mappings = MappingsCache::rememberQuery($query);/*Cache::remember($key, Carbon::now()->addMinutes(15), function() use ($query) {
-       return Mapping::where($query)->get()->toArray();
-     });*/
-
-
-		 return response()->json($mappings);
+		 return response()->json($mapping)->header("Access-Control-Allow-Origin", "*");
 	 }
 
-   public function add(Request $request) {
-      $class = "App\TitleMapping";
-      $values = array(
-          "tmdbid" => $request->query("tmdbid"),
-          "imdbid" => $request->query("imdbid")
-      );
-      $new_mapping = null;
-      if ($request->query("type") == "title")
-      {
-          $aka_title = $request->query("aka_title");
-          $clean_title = Helper::clean_title($aka_title);
+	 public function find(MappingFindRequest $request)
+     {
+         $tmdbid = $request->query("tmdbid");
+         $movie = MappingMovie::find($tmdbid);
 
-          $mapping = TitleMapping::where("aka_clean_title", $clean_title)->first();
-          if (isset($mapping))
-          {
-              $mapping->map->first()->vote();
-              $new_mapping = $mapping->map->first();
-          } else
-          {
-              $values["aka_title"] = $aka_title;
-              $new_mapping = Mapping::newMapping($values, $class);
-          }
+         if ($movie == null)
+         {
+             abort(404, "Movie with tmdbid $tmdbid was not found. Either it does not exist or no mappings have been added yet.");
+         }
 
-      } else if ($request->query("type") == "year")
-      {
-          $class = "App\YearMapping";
+         $type = $request->query("type");
 
-          $aka_year = $request->query("aka_year");
+         $titles = [];
+         $years = [];
 
-          $mapping = YearMapping::where("aka_year", $aka_year)->first();
-          if (isset($mapping))
-          {
-              $mapping->map->first()->vote();
-              $new_mapping = $mapping->map->first();
-          } else
-          {
-              $values["aka_year"] = $aka_year;
-              $new_mapping = Mapping::newMapping($values, $class);
-          }
-      }
+         if ($type == "title" || $type == "all" || $type == null)
+         {
+             $titles = Mapping::where("tmdbid", "=", $tmdbid)->where("info_type", "=", "title")->get()->toArray();
+         }
 
-      return response()->json($new_mapping);
+         if ($type == "year" || $type == "all" || $type == null)
+         {
+             $years = Mapping::where("tmdbid", "=", $tmdbid)->where("info_type", "=", "year")->get()->toArray();
+         }
+
+         $movie["mappings"] = ["titles" => $titles, "years" => $years];
+
+         return response()->json($movie)->header("Access-Control-Allow-Origin", "*");
+     }
+
+   public function add(MappingAddRequest $request) {
+        $tmdbid = $request->query("tmdbid");
+        $type = $request->query("type");
+
+        //Ensure that the movie is in our mapping database!
+        if (!MappingMovie::find($tmdbid))
+        {
+            $movie = Movie::find($tmdbid);
+            if ($movie == null)
+            {
+                abort(422, "The movie with the given tmdbid could not be found!");
+            }
+            $movie->createMappingMovie()->save();
+        }
+
+        $existing = false;
+        $info = null;
+
+        if ($type == "title")
+        {
+            $aka_title = $request->get("aka_title");
+            $aka_clean_title = Helper::clean_title($aka_title);
+            $existing = Mapping::whereHas("title_info", function($query) use($aka_clean_title){
+                $query->where("aka_clean_title", "=", $aka_clean_title);
+            })->first();
+            $info = new TitleInfo(["aka_title" => $aka_title, "aka_clean_title" => $aka_clean_title]);
+        }
+        else
+        {
+            $aka_year = $request->get("aka_year");
+            $existing = Mapping::whereHas("year_info", function($query) use($aka_year){
+                $query->where("aka_year", "=", $aka_year);
+            })->first();
+            $info = new YearInfo(["aka_year" => $aka_year]);
+        }
+
+        if ($existing != null && $existing != false) {
+            $existing->vote();
+            return response()->json($existing);
+        }
+
+        $info->save();
+
+        $mapping = new Mapping(["tmdbid" => $tmdbid, "info_type" => $type, "info_id" => $info->id]);
+
+        $mapping->save();
+
+        $mapping->info = $info;
+
+        $mapping->votes = 1;
+        $mapping->vote_count = 1;
+        $mapping->locked = false;
+
+        $event = new Event(["type" => EventType::AddedMapping, "mappings_id" => $mapping->id, "ip" => md5($_SERVER['REMOTE_ADDR'])]);
+        $event->save();
+
+        return response()->json($mapping)->header("Access-Control-Allow-Origin", "*");
    }
 
-   public function vote(Request $request) {
+   public function vote(MappingGetRequest $request) {
       $id = $request->query("id");
       $direction = $request->query("direction");
-      if (!isset($direction))
+      if (!isset($direction) || $direction > 1)
       {
           $direction = 1;
       }
+
+      if ($direction < 1)
+      {
+          $direction = -1;
+      }
       $mapping = Mapping::find($id);
+
+      if ($mapping == null)
+      {
+          abort(404,"Mapping with id $id was not found. Maybe it was removed?");
+      }
+
       $mapping->vote($direction);
 
-      return response()->json($mapping);
+      return response()->json($mapping)->header("Access-Control-Allow-Origin", "*");
+   }
+
+   public function latest() {
+        $events = Cache::remember("mappings.latest", Carbon::now()->addMinutes(1), function(){
+            return Event::where("type", "=", 0)->orderByDesc("date")->limit(5)->get()->toArray();
+        });
+
+        return response()->json($events)->header("Access-Control-Allow-Origin", "*");
    }
 }
 

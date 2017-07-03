@@ -7,17 +7,20 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Cache;
 use Helper;
 use MappingsCache;
+use Carbon\Carbon;
 
-Relation::morphMap([
-    'title' => 'App\TitleMapping',
-    'year' => 'App\YearMapping',
-]);
 
 class Mapping extends Model
 {
     protected $connection = 'mappings_mysql';
 
-    protected $fillable = array('tmdbid', "imdbid");
+    protected $fillable = array('tmdbid', "info_type", "info_id");
+
+    protected $casts = [
+        "locked" => "boolean",
+    ];
+
+
     //
 
     /**
@@ -27,21 +30,38 @@ class Mapping extends Model
      */
     public $timestamps = false;
 
-    public function mapable()
+    public function info()
     {
-        return $this->morphTo();
+        if ($this->info_type == "title")
+        {
+            return $this->hasOne("App\TitleInfo", "id", "info_id");
+        }
+
+        return $this->hasOne("App\YearInfo", "id", "info_id");
     }
 
-    /*public function jsonSerialize()
+    public function title_info()
     {
-        $arr = $this->toArray();
-        //var_dump($this->mappable());
-        return array_merge( $this->mapable->toArray(), $arr);
-    }*/
+        return $this->hasOne("App\TitleInfo", "id", "info_id");
+    }
+
+    public function year_info()
+    {
+        return $this->hasOne("App\YearInfo", "id", "info_id");
+    }
 
     public function toArray()
     {
-        return array_merge($this->mapable->toArray(), parent::toArray());
+        $arr = parent::toArray();
+        $arr["info"] = $this->info->toArray();
+        $total = $this->vote_count;
+
+        //$random_variation = round($total / 10.0);
+
+        $variation = 0;//random_int(-$random_variation, $random_variation);
+        $arr["votes"] += $variation;
+        $arr["vote_count"] += abs($variation);
+        return $arr;
     }
 
     public static function newMapping($values, $class)
@@ -58,21 +78,31 @@ class Mapping extends Model
 
     public function vote($direction = 1)
     {
-        $this->report_count = $this->report_count + $direction;
-        $this->total_reports += 1;
-        $this->save();
-        $id = $this->id;
-        $tmdbid = $this->tmdbid;
-        $imdbid = $this->imdbid;
-        $type = "title";
+        if ($this->locked)
+        {
+            return;
+        }
 
-        //Update cache for this id, so new votes are correctly displayed
-        MappingsCache::updateMapping($this);
+        $ip = md5($_SERVER['REMOTE_ADDR']);
+        if (Event::whereIn("type", [EventType::AddedMapping, EventType::ApproveMapping, EventType::DisapproveMapping])->where("mappings_id", "=", $this->id)->where("ip", "=", $ip)->whereBetween("date", array(Carbon::now()->addDays(-1), Carbon::now()))->first())
+        {
+            return;
+        }
+        $this->votes = $this->votes + $direction;
+        $this->vote_count += 1;
+        $event_type = EventType::ApproveMapping;
+        if ($direction == -1)
+        {
+            $event_type = EventType::DisapproveMapping;
+        }
+        $event = new Event(["type" => $event_type, "mappings_id" => $this->id, "ip" => $ip]);
+        $event->save();
+        $this->save();
     }
 
 }
 
-class TitleMapping extends Model {
+class TitleInfo extends Model {
     protected $table = "title_mappings";
 
     protected $connection = 'mappings_mysql';
@@ -98,14 +128,9 @@ class TitleMapping extends Model {
 
     }
 
-    public function map()
-    {
-        $morph = $this->morphMany('App\Mapping', 'mapable', "mapable_type", "mapable_id");
-        return $morph;
-    }
 }
 
-class YearMapping extends Model {
+class YearInfo extends Model {
     protected $table = "year_mappings";
 
     protected $connection = 'mappings_mysql';
@@ -119,8 +144,4 @@ class YearMapping extends Model {
      */
     public $timestamps = false;
 
-    public function map()
-    {
-        return $this->morphMany('App\Mapping', 'mapable', "mapable_type", "mapable_id");
-    }
 }

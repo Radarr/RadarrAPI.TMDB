@@ -22,7 +22,7 @@ class IMDBController extends JSONController
      * @return Response
      */
 	 public function top250(Request $request) {
-		 $movies = Helper::get_from_imdb_py("top250");
+		 $movies = Helper::get_from_imdb_py("/template/imdb-android-writable/6.4.list-top250-skeleton.jstl/render", "!all");
 		 return response()->json($movies);
 	 }
 
@@ -32,12 +32,22 @@ class IMDBController extends JSONController
      {
         $limit = $request->query("limit");
      }
-     $movies = Helper::get_from_imdb_py("popular", $limit);
+     $movies = Helper::get_from_imdb_py("/template/imdb-android-writable/6.4.movies-popular-titles.jstl/render", "ranks.!all.id");
      return response()->json($movies);
    }
 
    public function user_list(IMDBListRequest $request) {
-     $movies = Helper::get_from_imdb_py("list", $request->query("listId"), 5);
+	     $listId = $request->query("listId");
+	     $path = "/lists/";
+	     if (stripos($listId, "ur") != false)
+         {
+             $path .= $listId . "/watchlist";
+         }
+         else
+         {
+             $path.= $listId;
+         }
+     $movies = Helper::get_from_imdb_py($path, "list.items.!all.entityId", 5);
 		 return response()->json($movies);
    }
 }

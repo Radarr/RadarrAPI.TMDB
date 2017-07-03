@@ -14,6 +14,10 @@ class Movie extends Model
      */
     public $timestamps = false;
 
+    protected $casts = [
+        "adult" => "boolean",
+    ];
+
     public function release_dates() {
 	    return $this->hasMany("App\ReleaseDate", "tmdbid", "id");
     }
@@ -31,8 +35,13 @@ class Movie extends Model
             $arr["physical_release"] = $physical_release->release_date;
             $arr["physical_release_note"] = $physical_release->note;
         }
-        $arr["genre_ids"] = explode(",", $this->genres);
-        unset($arr["genres"]);
+        $arr["genres"] = explode(",", $this->genres);
+        //unset($arr["genres"]);
         return $arr;
     }
+
+    public function createMappingMovie() {
+        return new MappingMovie(["id" => $this->id, "title" => $this->title, "imdb_id" => $this->imdb_id]);
+    }
 }
+

@@ -8,6 +8,7 @@
         "php": ">=5.6.4",
         "barryvdh/laravel-debugbar": "^2.4",
         "graham-campbell/exceptions": "^9.3",
+        "guzzlehttp/guzzle": "~6.0",
         "jenssegers/rollbar": "^1.5",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
@@ -27,7 +28,8 @@
         ],
         "psr-4": {
             "App\\": "app/"
-        }
+        },
+        "files": ["app/Helpers/HelperFunctions.php"]
     },
     "autoload-dev": {
         "psr-4": {
