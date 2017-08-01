@@ -34,6 +34,9 @@ class MappingAddRequest extends JSONRequest
             'type' => array(
                 "required",
                 Rule::in(['title', 'year']),
+            ),
+            'language' => array(
+                Rule::in(['en', 'fr', 'es', 'de', 'it', 'da', 'nl', 'ja', 'ru', 'pl', 'vi', 'sv', 'no', 'fi', 'tr', 'pt', 'nl', 'el', 'ko', 'hu'])
             )
         ];
 
@@ -64,7 +67,8 @@ class MappingAddRequest extends JSONRequest
             "aka_year.required" => "The alternative year is required with type 'year'.",
             "aka_year.regex" => "The alternative year has to be a valid movie year.",
             "aka_title.required" => "The alternative title is required with type 'title'",
-            "aka_title.regex" => "The alternative title must be at least 3 letters long"
+            "aka_title.regex" => "The alternative title must be at least 3 letters long",
+            "language.in" => "The language must be a valid ISO639-1 code."
         ];
     }
 
@@ -98,6 +102,9 @@ class MappingFindRequest extends JSONRequest
                 "sometimes",
                 "required",
                 Rule::in(['title', 'year', 'all']),
+            ),
+            'language' => array(
+                Rule::in(['en', 'fr', 'es', 'de', 'it', 'da', 'nl', 'ja', 'ru', 'pl', 'vi', 'sv', 'no', 'fi', 'tr', 'pt', 'nl', 'el', 'ko', 'hu'])
             )
         ];
 
@@ -116,6 +123,7 @@ class MappingFindRequest extends JSONRequest
             'tmdbid.regex'  => 'The format of the tmdbid given is invalid!',
             "type.required" => "The type of mappings to return is required.",
             "type.in" => "The type of mapping has to be on of 'title', 'year' or 'all'.",
+            "language.in" => "The language must be a valid ISO639-1 code."
         ];
     }
 
