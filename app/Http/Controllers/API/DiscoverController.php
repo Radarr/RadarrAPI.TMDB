@@ -85,8 +85,6 @@ class DiscoverController extends JSONController
 
        $movies = $this->filterMovies($movies);
 
-       dd($movies);
-
       return response()->json($movies);
    }
 
