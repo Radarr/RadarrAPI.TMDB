@@ -85,7 +85,7 @@ class DiscoverController extends JSONController
 
        $movies = $this->filterMovies($movies);
 
-      return response()->json($movies);
+      return response()->json(array_values($movies));
    }
 
    function filterMovies($movies)
