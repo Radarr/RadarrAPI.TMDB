@@ -107,7 +107,7 @@ class TitleInfo extends Model {
 
     protected $connection = 'mappings_mysql';
 
-    protected $fillable = array('aka_title', "aka_clean_title");
+    protected $fillable = array('aka_title', "aka_clean_title", "language");
 
     /**
      * Indicates if the model should be timestamped.

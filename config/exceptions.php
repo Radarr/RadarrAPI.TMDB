@@ -103,7 +103,7 @@ return [
         'Illuminate\Database\Eloquent\ModelNotFoundException'                     => 'warning',
         'Illuminate\Session\TokenMismatchException'                               => 'notice',
         'Symfony\Component\HttpKernel\Exception\NotFoundHttpException'            => 'notice',
-        'Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException' => 'error',
+        'Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException' => 'warning',
         'Symfony\Component\HttpKernel\Exception\HttpExceptionInterface'           => 'warning',
         'Symfony\Component\Debug\Exception\FatalErrorException'                   => 'critical',
         'Exception'                                                               => 'error',

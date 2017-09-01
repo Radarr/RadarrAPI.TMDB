@@ -10,6 +10,7 @@ use App\StevenLuMovie;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Input;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,6 +31,7 @@ class DiscoverController extends JSONController
    			 $query->whereIn("type", array(4,5,6))->whereBetween("release_date", array(Carbon::now()->subWeek(), Carbon::now()->addWeeks(3)))->orderBy("release_date", "ASC");
    		 })->where("adult", "=", "0")->orderBy("popularity", "DESC")->get()->toArray();
      });
+         $resp = $this->filterMovies($resp);
 		 return response()->json($resp);
 	 }
 
@@ -37,6 +39,7 @@ class DiscoverController extends JSONController
       $movies = Cache::remember("discovery.popular", new Carbon('tomorrow midnight'), function(){
           return array_values(StevenLuMovie::all()->sortByDesc("TMDBMovie.popularity")->toArray());
       });
+       $movies = $this->filterMovies($movies);
       return response()->json($movies);
    }
 
@@ -48,36 +51,56 @@ class DiscoverController extends JSONController
    public function recommendations(Request $request) {
       $ids = $request->input("tmdbIds");
       $ignoredIds = $request->input("ignoredIds");
-      if ($ignoredIds != "")
-      {
-          $ignoredIds = ",".$ignoredIds;
-      }
+       $movies = Cache::remember("discovery.recommendations.$ids.$ignoredIds", new Carbon("tomorrow midnight"), function() use($ignoredIds, $ids){
+           if ($ignoredIds != "")
+           {
+               $ignoredIds = ",".$ignoredIds;
+           }
 
-      if ($ids == "" || $ids == null)
-      {
-          abort(422, "Please add some movies before using our recommendation engine :)");
-      }
-      $movies_db = DB::select("SELECT mo.id, mo.popularity, mo.imdb_id, mo.title, mo.overview, mo.vote_average, mo.vote_count, mo.tagline, mo.poster_path, mo.release_date, mo.release_year, mo.trailer_key, mo.trailer_site, mo.backdrop_path, mo.homepage, mo.runtime, mo.countO, mo.genres, mo.runtime, mo.adult FROM ( SELECT m.*, r.recommended_id, r.tmdbid, r.id as rid, count(m.id) as countO FROM movies m, recommendations r WHERE m.id = r.recommended_id AND r.tmdbid in ($ids) AND r.recommended_id not in ($ids$ignoredIds) AND m.adult = 0 GROUP BY m.id ) as mo;");
-      $movies = json_decode(json_encode($movies_db), true);
+           if ($ids == "" || $ids == null)
+           {
+               abort(422, "Please add some movies before using our recommendation engine :)");
+           }
+           $movies_db = DB::select("SELECT mo.id, mo.popularity, mo.imdb_id, mo.title, mo.overview, mo.vote_average, mo.vote_count, mo.tagline, mo.poster_path, mo.release_date, mo.release_year, mo.trailer_key, mo.trailer_site, mo.backdrop_path, mo.homepage, mo.runtime, mo.countO, mo.genres, mo.runtime, mo.adult FROM ( SELECT m.*, r.recommended_id, r.tmdbid, r.id as rid, count(m.id) as countO FROM movies m, recommendations r WHERE m.id = r.recommended_id AND r.tmdbid in ($ids) AND r.recommended_id not in ($ids$ignoredIds) AND m.adult = 0 GROUP BY m.id ) as mo;");
+           $movies = json_decode(json_encode($movies_db), true);
 
-      $this->count_max = maximum($movies, "countO");
-      $this->pop_max = maximum($movies, "popularity");
-      $this->vote_max = maximum($movies, "vote_average");
+           $this->count_max = maximum($movies, "countO");
+           $this->pop_max = maximum($movies, "popularity");
+           $this->vote_max = maximum($movies, "vote_average");
 
-      usort($movies, array($this, "compare_score"));
+           usort($movies, array($this, "compare_score"));
 
-      $movies = array_slice($movies, 0, 30);
-      $resp = [];
+           $movies = array_slice($movies, 0, 30);
+           $resp = [];
 
-      foreach ($movies as $movie) {
-          unset($movie["countO"]);
-          $movie["genres"] = explode(",", $movie["genres"]);
-          $movie["adult"] = $movie["adult"] == 1;
-          $resp[] = $movie;
-      }
+           foreach ($movies as $movie) {
+               unset($movie["countO"]);
+               $movie["genres"] = explode(",", $movie["genres"]);
+               $movie["adult"] = $movie["adult"] == 1;
+               $resp[] = $movie;
+           }
 
+           return $resp;
+       });
 
-      return response()->json($resp);
+       $movies = $this->filterMovies($movies);
+
+      return response()->json(array_values($movies));
+   }
+
+   function filterMovies($movies)
+   {
+       $yearLower = Input::get('yearLower', 1800);
+       $yearUpper = Input::get('yearUpper', 2300);
+       $genreIds = Input::get('genreIds', "");
+       if (!(is_array($genreIds) || $genreIds === null))
+       {
+            $genreIds = explode(",", $genreIds);
+       }
+       return array_filter($movies, function($value) use ($yearLower, $yearUpper, $genreIds) {
+           //dd($genreIds);
+            return $value["release_year"] >= $yearLower && $value["release_year"] <= $yearUpper && ($genreIds != array("") ? count(array_intersect($value["genres"], $genreIds)) > 0 : true);
+       });
    }
 
    function score ($elem)

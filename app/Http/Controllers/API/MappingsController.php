@@ -60,13 +60,16 @@ class MappingsController extends JSONController
          }
 
          $type = $request->query("type");
+         $language = $request->query("language", "en");
 
          $titles = [];
          $years = [];
 
          if ($type == "title" || $type == "all" || $type == null)
          {
-             $titles = Mapping::where("tmdbid", "=", $tmdbid)->where("info_type", "=", "title")->get()->toArray();
+             $titles = Mapping::where("tmdbid", "=", $tmdbid)->where("info_type", "=", "title")->whereHas("title_info", function($query) use($language){
+                 $query->where("language", "=", $language);
+             })->get()->toArray();
          }
 
          if ($type == "year" || $type == "all" || $type == null)
@@ -100,11 +103,12 @@ class MappingsController extends JSONController
         if ($type == "title")
         {
             $aka_title = $request->get("aka_title");
+            $title_language = $request->get("language", "en");
             $aka_clean_title = Helper::clean_title($aka_title);
             $existing = Mapping::whereHas("title_info", function($query) use($aka_clean_title){
                 $query->where("aka_clean_title", "=", $aka_clean_title);
             })->first();
-            $info = new TitleInfo(["aka_title" => $aka_title, "aka_clean_title" => $aka_clean_title]);
+            $info = new TitleInfo(["aka_title" => $aka_title, "aka_clean_title" => $aka_clean_title, "language" => $title_language]);
         }
         else
         {
