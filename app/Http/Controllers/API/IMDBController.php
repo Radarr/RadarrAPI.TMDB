@@ -39,9 +39,9 @@ class IMDBController extends JSONController
    public function user_list(IMDBListRequest $request) {
 	     $listId = $request->query("listId");
 	     $path = "/lists/";
-	     if (stripos($listId, "ur") != false)
+	     if (stripos($listId, "ur") !== false)
          {
-             $path .= $listId . "/watchlist";
+             $path .= $listId . "/watchlist/";
          }
          else
          {
