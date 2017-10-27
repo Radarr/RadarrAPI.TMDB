@@ -14,11 +14,11 @@ class StevenLuMovie extends Model
      */
     public $timestamps = false;
 
-    protected $table = "stevenlu";
+    protected $table = 'stevenlu';
 
     public function TMDBMovie()
     {
-        return $this->hasOne("App\Movie", "imdb_id", "imdb_id");
+        return $this->hasOne("App\Movie", 'imdb_id', 'imdb_id');
     }
 
     public function toArray()
