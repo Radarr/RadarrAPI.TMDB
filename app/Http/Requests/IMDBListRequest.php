@@ -28,7 +28,7 @@ class IMDBListRequest extends JSONRequest
         return [
           'listId' => array(
             "required",
-            "regex:/((ls)|(ur))\d{8,11}/"
+            "regex:/((ls)|(ur))\d{1,12}/"
           )
         ];
     }
