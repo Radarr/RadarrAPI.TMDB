@@ -15,33 +15,34 @@ class Movie extends Model
     public $timestamps = false;
 
     protected $casts = [
-        "adult" => "boolean",
+        'adult' => 'boolean',
     ];
 
-    public function release_dates() {
-	    return $this->hasMany("App\ReleaseDate", "tmdbid", "id");
+    public function release_dates()
+    {
+        return $this->hasMany("App\ReleaseDate", 'tmdbid', 'id');
     }
 
-    public function physical_release() {
-        return $this->hasOne("App\ReleaseDate", "tmdbid", "id")->whereIn("type", array(4,5,6))->orderBy("release_date", "ASC")->limit(1);
+    public function physical_release()
+    {
+        return $this->hasOne("App\ReleaseDate", 'tmdbid', 'id')->whereIn('type', [4, 5, 6])->orderBy('release_date', 'ASC')->limit(1);
     }
 
     public function toArray()
     {
         $arr = parent::toArray();
         $physical_release = $this->physical_release;
-        if ($physical_release != NULL)
-        {
-            $arr["physical_release"] = $physical_release->release_date;
-            $arr["physical_release_note"] = $physical_release->note;
+        if ($physical_release != null) {
+            $arr['physical_release'] = $physical_release->release_date;
+            $arr['physical_release_note'] = $physical_release->note;
         }
-        $arr["genres"] = explode(",", $this->genres);
+        $arr['genres'] = explode(',', $this->genres);
         //unset($arr["genres"]);
         return $arr;
     }
 
-    public function createMappingMovie() {
-        return new MappingMovie(["id" => $this->id, "title" => $this->title, "imdb_id" => $this->imdb_id]);
+    public function createMappingMovie()
+    {
+        return new MappingMovie(['id' => $this->id, 'title' => $this->title, 'imdb_id' => $this->imdb_id]);
     }
 }
-
