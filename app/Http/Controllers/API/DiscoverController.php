@@ -29,10 +29,9 @@ class DiscoverController extends JSONController
 		 $resp = Cache::remember("discovery.upcoming", Carbon::now()->addHours(12), function (){
         return Movie::whereHas("release_dates", function($query) {
    			 $query->whereIn("type", array(4,5,6))->whereBetween("release_date", array(Carbon::now()->subWeek(), Carbon::now()->addWeeks(3)))->orderBy("release_date", "ASC");
-   		 })->where("adult", "=", "0")->orderBy("popularity", "DESC")->get()->toArray();
+   		 })->orderBy("popularity", "DESC")->filter()->get();
      });
-         $resp = $this->filterMovies($resp);
-		 return response()->json($resp);
+		 return $resp;
 	 }
 
    public function popular() {
@@ -49,9 +48,9 @@ class DiscoverController extends JSONController
   protected $count_max = 0;
 
    public function recommendations(Request $request) {
-      $ids = $request->input("tmdbIds");
-      $ignoredIds = $request->input("ignoredIds");
-       $movies = Cache::remember("discovery.recommendations.$ids.$ignoredIds", new Carbon("tomorrow midnight"), function() use($ignoredIds, $ids){
+      $ids = $request->input("tmdbIds", []);
+      $ignoredIds = $request->input("ignoredIds", []);
+       /*$movies = Cache::remember("discovery.recommendations.$ids.$ignoredIds", new Carbon("tomorrow midnight"), function() use($ignoredIds, $ids){
            if ($ignoredIds != "")
            {
                $ignoredIds = ",".$ignoredIds;
@@ -85,7 +84,30 @@ class DiscoverController extends JSONController
 
        $movies = $this->filterMovies($movies);
 
-      return response()->json(array_values($movies));
+      return response()->json(array_values($movies));*/
+
+       $movies = Movie::withCount(["recommendedFrom" => function($q) use ($ids){
+           $q->whereIn("id", $ids);
+       }])->whereNotIn("id", array_merge($ignoredIds, $ids))->whereIn("id", function($q) use ($ids){
+           $q->from("movies as m")
+               ->selectRaw('recommendations.recommended_id')
+               ->join('recommendations', 'm.id', '=', 'recommendations.movie_id')
+               ->whereRaw('recommendations.recommended_id = `movies`.`id`')
+               ->whereIn("id", $ids);
+       })->filter()->get();
+
+       $count_max = $movies->max("recommended_from_count");
+       $pop_max = $movies->max("popularity");
+       //$vote_max = maximum($movies, "vote_average");
+
+       $sorted = $movies->sortByDesc(function($movie, $key) use ($count_max, $pop_max){
+           return (float)($movie->popularity) / (2*$pop_max) + (float)($movie->recommended_from_count) / (2*$count_max);
+       });
+
+       //usort($movies, array($this, "compare_score"));
+
+       //return response("<html><head></head><body>Hi</body></html>")->header("Content-Type", "text/html");
+       return $sorted->values();
    }
 
    function filterMovies($movies)
