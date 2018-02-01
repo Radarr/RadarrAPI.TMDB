@@ -6,9 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Credit extends Model
 {
-    protected $with = ["cast"];
+    protected $with = ['cast'];
 
-    public function cast() {
-        return $this->hasMany("App\Person")->where("type", "=", "cast");
+    public function cast()
+    {
+        return $this->hasMany("App\Person")->where('type', '=', 'cast');
     }
 }
