@@ -26,17 +26,14 @@ class Movie extends Model
 
     protected $with = ["genres", "collection", "keywords", "cast", "crew", "trailer", "ratings", "release_dates", "alternative_titles"];
 
-    /*public function release_dates() {
-	    return $this->hasMany("App\ReleaseDate", "tmdbid", "id");
-    }
-
-    public function physical_release() {
-        return $this->hasOne("App\ReleaseDate", "tmdbid", "id")->whereIn("type", array(4,5,6))->orderBy("release_date", "ASC")->limit(1);
-    }*/
-
     public function getCreditsAttribute()
     {
         return ["cast" => $this->cast, "crew" => $this->crew];
+    }
+
+    public function scopeDefaultWith()
+    {
+        return $this->with(["similar", "recommendations"]);
     }
 
     public function scopeFilter($query) {
@@ -153,6 +150,11 @@ class Movie extends Model
 
     public function credits() {
         return $this->hasMany("App\Credit");
+    }
+
+    public function mappings()
+    {
+        return $this->hasMany("App\Mapping", "tmdbid", "id");
     }
 
     public function createMappingMovie() {

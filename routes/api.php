@@ -57,8 +57,10 @@ Route::get("/imdb/popular", "API\IMDBController@popular");
 Route::get("/imdb/list", "API\IMDBController@user_list");
 
 Route::get("/movie/{id}", function($id) {
-    return \App\Movie::with(["similar", "recommendations"])->findOrFail($id);
+    return \App\Movie::defaultWith()->findOrFail($id);
 });
+
+Route::post("/movie/refresh", "API\MovieController@refresh_movies");
 
 Route::get("/collection/{id}", function($id) {
     return \App\Collection::with(["movies", "movies.similar"])->findOrFail($id);
@@ -68,8 +70,6 @@ Route::get("/collection/{id}/movies", function($id) {
     return \App\Collection::with(["movies", "movies.similar"])->findOrFail($id)->movies;
 });
 
-Route::get("/person/{id}/movies", function($id) {
-    return \App\Person::with(["movies", "movies.similar"])->findOrFail($id)->movies()->wherePivot("type", "cast")->get();
-});
+Route::get("/person/{id}/movies", "API\PersonController@person_movies");
 
 //Route::get("/maintenance/activate", "DBMaintenanceController@activate");

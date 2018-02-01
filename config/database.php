@@ -56,10 +56,10 @@ return [
 
         "mappings_mysql" => [
           'driver' => 'mysql',
-          'host' => env('DB_HOST', '127.0.0.1'),
+          'host' => 'leonardogalli.ch',//env('DB_HOST', '127.0.0.1'),
           'port' => env('DB_PORT', '3306'),
           'database' => "leonard1_mappings",
-          'username' => env('DB_USERNAME', 'forge'),
+          'username' => 'leonard1',//env('DB_USERNAME', 'forge'),
           'password' => env('DB_PASSWORD', ''),
           'unix_socket' => env('DB_SOCKET', ''),
           'charset' => 'utf8mb4',
