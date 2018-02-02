@@ -22,7 +22,7 @@ class MappingsController extends JSONController
     /**
      * Returns a json string for api usage.
      *
-     * @param  int  $id
+     * @param int $id
      *
      * @return Response
      */
