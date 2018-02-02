@@ -16,4 +16,9 @@ class MovieController extends Controller
         $movies = Movie::whereIn("id", $ids)->where("updated_at", ">", Carbon::now()->subDay());
         return $movies->paginate(250);
     }
+
+    public function index(int $id)
+    {
+        return Movie::findOrFail($id);
+    }
 }

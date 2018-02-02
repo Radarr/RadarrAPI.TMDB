@@ -56,9 +56,7 @@ Route::get("/imdb/popular", "API\IMDBController@popular");
 
 Route::get("/imdb/list", "API\IMDBController@user_list");
 
-Route::get("/movie/{id}", function($id) {
-    return \App\Movie::defaultWith()->findOrFail($id);
-});
+Route::get("/movie/{id}", "API\MovieController@index");
 
 Route::post("/movie/refresh", "API\MovieController@refresh_movies");
 
@@ -72,4 +70,5 @@ Route::get("/collection/{id}/movies", function($id) {
 
 Route::get("/person/{id}/movies", "API\PersonController@person_movies");
 
+Route::get("/search/multi/{term}", "API\SearchController@multi");
 //Route::get("/maintenance/activate", "DBMaintenanceController@activate");

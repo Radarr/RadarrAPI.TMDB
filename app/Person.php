@@ -18,21 +18,37 @@ class Person extends Model
 
     public function getDepartmentAttribute()
     {
+        if ($this->pivot == null)
+        {
+            return null;
+        }
         return $this->pivot->department;
     }
 
     public function getJobAttribute()
     {
+        if ($this->pivot == null)
+        {
+            return null;
+        }
         return $this->pivot->job;
     }
 
     public function getOrderAttribute()
     {
+        if ($this->pivot == null)
+        {
+            return null;
+        }
         return $this->pivot->order;
     }
 
     public function getCharacterAttribute()
     {
+        if ($this->pivot == null)
+        {
+            return null;
+        }
         return $this->pivot->character;
     }
 }
