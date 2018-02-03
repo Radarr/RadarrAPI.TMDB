@@ -2,8 +2,6 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class IMDBListRequest extends JSONRequest
@@ -26,10 +24,10 @@ class IMDBListRequest extends JSONRequest
     public function rules()
     {
         return [
-          'listId' => array(
-            "required",
-            "regex:/((ls)|(ur))\d{1,12}/"
-          )
+          'listId' => [
+            'required',
+            "regex:/((ls)|(ur))\d{1,12}/",
+          ],
         ];
     }
 
@@ -42,8 +40,7 @@ class IMDBListRequest extends JSONRequest
     {
         return [
             'listId.required' => 'An id for the imdb list is required!',
-            'listId.regex'  => 'The format of the listId given is invalid!',
+            'listId.regex'    => 'The format of the listId given is invalid!',
         ];
     }
-
 }
