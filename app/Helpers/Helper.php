@@ -23,14 +23,14 @@ class Helper
 
           $fullIds = array();
 
-          if (count($fullIds) == 0)
-          {
-              return [];
-          }
-
           foreach ($ids as $id)
           {
               $fullIds[] = rtrim(str_ireplace("/title/", "", $id), "/");
+          }
+
+          if (count($fullIds) == 0)
+          {
+              return [];
           }
 
           $idStr = join("','", $fullIds);
