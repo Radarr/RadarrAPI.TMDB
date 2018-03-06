@@ -198,6 +198,8 @@ return [
 
         Jenssegers\Rollbar\RollbarServiceProvider::class,
 
+        ElcoBvg\Opcache\ServiceProvider::class,
+
     ],
 
     /*

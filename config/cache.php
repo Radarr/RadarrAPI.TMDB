@@ -73,6 +73,10 @@ return [
             'connection' => 'default',
         ],
 
+        'opcache' => [
+            'driver' => 'opcache',
+        ],
+
     ],
 
     /*
