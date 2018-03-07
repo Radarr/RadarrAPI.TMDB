@@ -33,7 +33,7 @@ class DatadogMiddleware
      * @param Response $response
      * @param double $startTime
      */
-    protected static function logDuration(Request $request, Response $response, $startTime)
+    protected static function logDuration($request, $response, $startTime)
     {
         $duration = microtime(true) - $startTime;
 
