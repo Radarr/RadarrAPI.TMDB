@@ -45,9 +45,9 @@ class DatadogMiddleware
             "url" => $request->getSchemeAndHttpHost() . $request->getRequestUri(),
             "status_code" => $response->getStatusCode(),
             "radarr",
-            "version" => $matches["version"],
-            "os_name" => $matches["os_name"],
-            "os_version" => $matches["os_version"]
+            "version" => $matches["version"] ?? "unknown",
+            "os_name" => $matches["os_name"] ?? "unknown",
+            "os_version" => $matches["os_version"] ?? "unknown"
         ];
 
         Datadog::timing('request_time', $duration, 1, $tags);
