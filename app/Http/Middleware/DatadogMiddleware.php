@@ -52,6 +52,6 @@ class DatadogMiddleware
 
         Datadog::timing('request_time', $duration, 1, $tags);
 
-        Datadog::set('unique_users', $request->ip(), 1.0, $tags);
+        Datadog::set('unique_users', $request->ip(), 1, $tags);
     }
 }
