@@ -7,4 +7,4 @@ All endpoints should return json if requested to do so ("Accept: application/jso
 
 **Master deployed manually to https://api.radarr.video**
 
-**Develop deployed manually to https://staging.radarr.video**
+**Develop deployed manually to https://staging.api.radarr.video**
