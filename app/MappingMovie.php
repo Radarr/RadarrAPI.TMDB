@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  * User: leonardogalli
  * Date: 23.06.17
- * Time: 13:28
+ * Time: 13:28.
  */
 
 namespace App;
@@ -14,14 +14,14 @@ class MappingMovie extends Model
 {
     public $timestamps = false;
 
-    protected $fillable = array("id", "title", "imdb_id");
+    protected $fillable = ['id', 'title', 'imdb_id'];
 
-    protected $table = "movies";
+    protected $table = 'movies';
 
     protected $connection = 'mappings_mysql';
 
     public function mappings()
     {
-        return $this->hasMany("App\Mapping", "tmdbid", "id");
+        return $this->hasMany("App\Mapping", 'tmdbid', 'id');
     }
 }
