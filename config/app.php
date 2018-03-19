@@ -202,6 +202,7 @@ return [
 
         ChaseConey\LaravelDatadogHelper\LaravelDatadogHelperServiceProvider::class,
 
+        LaravelRestcord\ServiceProvider::class,
     ],
 
     /*

@@ -14,8 +14,10 @@
         "jenssegers/rollbar": "^1.5",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
+        "more-cores/laravel-restcord": "^2.3",
         "nesbot/carbon": "^1.22",
-        "nilportugues/laravel5-json-api": "^2.4"
+        "nilportugues/laravel5-json-api": "^2.4",
+        "restcord/restcord": "dev-master"
     },
     "require-dev": {
         "filp/whoops": "^2.1",
