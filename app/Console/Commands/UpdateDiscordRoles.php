@@ -40,46 +40,41 @@ class UpdateDiscordRoles extends Command
      */
     public function handle()
     {
-        $collective = file_get_contents("https://opencollective.com/radarr/members/users.json");
+        $collective = file_get_contents('https://opencollective.com/radarr/members/users.json');
         $donators = json_decode($collective, true);
         $d_users = [];
         $regex = "/^.*?\s(?P<name>.+?#\d{4}).*?$/";
-        foreach ($donators as $donator)
-        {
-            preg_match($regex, $donator["description"], $matches);
-            if ($matches != null)
-            {
-                $d_users[$matches["name"]] = $donator["role"];
-            }
-            else
-            {
-                $this->error("Could not find discord user name for backer: ". $donator["name"]);
+        foreach ($donators as $donator) {
+            preg_match($regex, $donator['description'], $matches);
+            if ($matches != null) {
+                $d_users[$matches['name']] = $donator['role'];
+            } else {
+                $this->error('Could not find discord user name for backer: '.$donator['name']);
             }
         }
 
-        $this->info("Found donators: ".(string)count($d_users));
+        $this->info('Found donators: '.(string) count($d_users));
 
         $guilds = [];
-        $members = $this->discord->guild->listGuildMembers(["guild.id" => 264387956343570434, "limit" => 1000]);
+        $members = $this->discord->guild->listGuildMembers(['guild.id' => 264387956343570434, 'limit' => 1000]);
         $guilds = $members;
-        while (count($members) == 1000)
-        {
-            $members = $this->discord->guild->listGuildMembers(["guild.id" => 264387956343570434, "limit" => 1000, "after" => $members[999]->user->id]);
+        while (count($members) == 1000) {
+            $members = $this->discord->guild->listGuildMembers(['guild.id' => 264387956343570434, 'limit' => 1000, 'after' => $members[999]->user->id]);
             $guilds = array_merge($guilds, $members);
         }
 
-        $g_roles = $this->discord->guild->getGuildRoles(["guild.id" => 264387956343570434]);
+        $g_roles = $this->discord->guild->getGuildRoles(['guild.id' => 264387956343570434]);
 
         foreach ($guilds as $user) {
-            $username = $user->user->username . "#" . $user->user->discriminator;
+            $username = $user->user->username.'#'.$user->user->discriminator;
             if (isset($d_users[$username])) {
                 $type = $d_users[$username];
                 $roles = $user->roles;
-                $role = $type == "BACKER" ? 425290590050058242 : 425290634350559232;
+                $role = $type == 'BACKER' ? 425290590050058242 : 425290634350559232;
                 if (!in_array($role, $roles)) {
                     $roles[] = $role;
 
-                    $res = $this->discord->guild->modifyGuildMember(["guild.id" => 264387956343570434, "user.id" => $user->user->id, "roles" => $roles]);
+                    $res = $this->discord->guild->modifyGuildMember(['guild.id' => 264387956343570434, 'user.id' => $user->user->id, 'roles' => $roles]);
                 }
 
                 unset($d_users[$username]);
