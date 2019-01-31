@@ -1,6 +1,6 @@
 workflow "Close non template issues" {
   on = "issues"
-  resolves = ["alpine"]
+  resolves = ["Testing"]
 }
 
 action "Filters for GitHub Actions" {
@@ -9,9 +9,9 @@ action "Filters for GitHub Actions" {
   secrets = ["GITHUB_TOKEN"]
 }
 
-action "alpine" {
-  uses = "docker://alpine"
+action "Testing" {
+  uses = "helaili/github-graphql-action@f9197781e4fe192857ae3a20eb7b028b78097d38"
   needs = ["Filters for GitHub Actions"]
   runs = "sh"
-  args = "-c \"ls -la\""
+  args = "-c \\\"ls -la\\\""
 }
