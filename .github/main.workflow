@@ -10,7 +10,7 @@ action "Filters for GitHub Actions" {
 }
 
 action "alpine" {
-  uses = "alpine"
+  uses = "docker://alpine"
   needs = ["Filters for GitHub Actions"]
   runs = "sh"
   args = "-c \"ls -la\""
