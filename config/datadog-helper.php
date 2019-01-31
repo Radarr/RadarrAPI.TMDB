@@ -24,9 +24,9 @@ return [
     */
     'prefix' => 'radarr.api',
 
-    'api_key' => env("DATADOG_API_KEY", ""),
+    'api_key' => env('DATADOG_API_KEY', ''),
 
-    'application_key' => env("DATADOG_APP_KEY", ""),
+    'application_key' => env('DATADOG_APP_KEY', ''),
 
     'datadog_host' => 'https://app.datadoghq.com',
 
@@ -46,6 +46,6 @@ return [
     | Since the UDP method uses the a local dogstatsd instance you don't need to setup
     | any additional application/api access.
     */
-    'transport' => 'TCP'
+    'transport' => 'TCP',
 
 ];
