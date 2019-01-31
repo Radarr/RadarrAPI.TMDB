@@ -37,7 +37,6 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
-            'throttle:240,1',
             'bindings',
             \App\Http\Middleware\CheckDBMaintAPI::class,
             \App\Http\Middleware\DatadogMiddleware::class,
