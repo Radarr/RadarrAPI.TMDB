@@ -12,6 +12,6 @@ action "Filters for GitHub Actions" {
 action "Testing" {
   uses = "helaili/github-graphql-action@f9197781e4fe192857ae3a20eb7b028b78097d38"
   needs = ["Filters for GitHub Actions"]
-  runs = "ls"
-  args = "-la"
+  runs = "cat"
+  args = "github-graphql-action.json"
 }
