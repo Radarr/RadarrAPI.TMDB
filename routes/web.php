@@ -12,11 +12,5 @@
 */
 
 Route::get('/', function () {
-	$movies = \App\Movie::find([11,12]);
-	//$movies = array();
-    return view('welcome', ['movies' => $movies]);
+    return view('welcome');
 });
-
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
