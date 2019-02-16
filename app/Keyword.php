@@ -6,9 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Keyword extends Model
 {
-    protected $hidden = ["pivot"];
+    protected $hidden = ['pivot'];
 
-    public function movies() {
+    public function movies()
+    {
         return $this->hasMany("App\Movie");
     }
 }
