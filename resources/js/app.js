@@ -22,7 +22,12 @@ window.Vue = require('vue');
 
 //Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 
-import ExampleComponent from './components/ExampleComponent';
+import App from './App';
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+import router from './router';
+
+Vue.use(ElementUI);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -32,10 +37,11 @@ import ExampleComponent from './components/ExampleComponent';
 
 const app = new Vue({
     el: '#app',
+    router,
     components : {
-        ExampleComponent
+        App
     },
-    render: h => h(ExampleComponent)
+    render: h => h(App)
 });
 
 
