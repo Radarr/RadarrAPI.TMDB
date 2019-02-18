@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Translation extends Model
 {
-    protected $hidden = ["movie_id"];
+    protected $hidden = ['movie_id'];
 
     public function getDataAttribute($value)
     {
