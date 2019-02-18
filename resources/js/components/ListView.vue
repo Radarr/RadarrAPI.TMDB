@@ -4,7 +4,8 @@
 
 <script>
     export default {
-        name: "ListView"
+        name: "ListView",
+        props: ["movies"]
     }
 </script>
 

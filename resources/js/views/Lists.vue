@@ -1,14 +1,12 @@
 <template>
     <el-container>
         <el-main>
-            <list-view v-show="listViewActive"></list-view>
-            <cards-view v-show="cardViewActive"></cards-view>
-            <div v-show="noViewActive">
-                <h1>There is no view active.</h1>
-            </div>
+            <list-view v-show="listViewActive" v-bind:movies="movies"></list-view>
+            <cards-view v-show="!listViewActive" v-bind:movies="movies"></cards-view>
         </el-main>
         <el-footer>
-            <el-button @click="switchTo">Test</el-button>
+            <el-button @click="switchTo('1')">ListView</el-button>
+            <el-button @click="switchTo('2')">CardView</el-button>
         </el-footer>
     </el-container>
 </template>
@@ -26,17 +24,26 @@
         data() {
             return {
                 listViewActive: false,
-                cardViewActive: true
+                movies: [
+                    {
+                        id: 1,
+                        name: "TestMovieName1",
+                        rotten: 70,
+                        imdb: 5.6
+                    }
+                ]
             }
-        },
-        computed: {
-            noViewActive: app => !app.listViewActive && !app.cardViewActive
         },
         methods: {
-            switchTo() {
-                listViewActive = !listViewActive;
-                cardViewActive = !cardViewActive;
+            switchTo(id) {
+                if(id == "2")
+                    this.$data.listViewActive = false;
+                else if(id == "1")
+                    this.$data.listViewActive = true;
             }
+        },
+        created() {
+
         }
     }
 </script>
