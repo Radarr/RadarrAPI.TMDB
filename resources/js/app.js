@@ -22,7 +22,7 @@ window.Vue = require('vue');
 
 //Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 
-import App from './App';
+import Main from './Main';
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import router from './router';
@@ -39,9 +39,9 @@ const app = new Vue({
     el: '#app',
     router,
     components : {
-        App
+        Main
     },
-    render: h => h(App)
+    render: h => h(Main)
 });
 
 

@@ -1,6 +1,9 @@
 <template>
     <div>
-        <h1>This is an about page.</h1>
+        <h1>About Radarr Apollo API</h1>
+        <p>
+            TODO
+        </p>
     </div>
 </template>
 

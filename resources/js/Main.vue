@@ -1,10 +1,15 @@
 <template>
     <el-container>
-        <el-header style="padding: 2px 5px;">
-            <img src="./assets/LogoDark.svg" alt="Radarr"/>
+        <el-header>
+            <div class="header-logo">
+                <router-link to="/">
+                    <img src="./assets/LogoDark.svg" alt="Radarr" />
+                </router-link>
+                    <span class="header-text">Apollo API</span>
+            </div>
         </el-header>
         <el-container>
-            <el-aside width="180px">
+            <el-aside width="250px">
                 <navigation></navigation>
             </el-aside>
             <el-main>
@@ -30,7 +35,7 @@
 <style>
     .el-header {
         background-color: #24292E;
-        text-color: white;
+        color: white;
         height: 8vh;
     }
 
@@ -45,5 +50,16 @@
 
     html, body {
         height:100%;
+    }
+
+    .header-logo {
+        display: flex;
+        align-items: center;
+        margin-top: 5px;
+    }
+
+    .header-text {
+        font-size: 24pt;
+        padding-left: 20px;
     }
 </style>

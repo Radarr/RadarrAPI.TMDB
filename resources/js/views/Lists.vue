@@ -1,6 +1,8 @@
 <template>
     <el-container>
         <el-main>
+            <h1>{{ listTitle }}</h1>
+            <p>{{ listDescription }}</p>
             <list-view v-show="listViewActive" v-bind:movies="movies"></list-view>
             <cards-view v-show="!listViewActive" v-bind:movies="movies"></cards-view>
         </el-main>
@@ -44,6 +46,18 @@
         },
         created() {
 
+        },
+        computed : {
+            listTitle() {
+                switch (this.$route.params.list) {
+                    case "imdb_top250": return "IMDB Top 250";
+                }
+            },
+            listDescription() {
+                switch (this.$route.params.list) {
+                    case "imdb_top250": return "The top 250 movies according to IMDB rating."
+                }
+            }
         }
     }
 </script>
