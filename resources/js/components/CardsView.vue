@@ -1,8 +1,9 @@
 <template>
-    <div>
-    <div v-for="movie in movies" v-bind:key="movie.id">
-        <card-item-view v-bind:movie="movie"></card-item-view>
-    </div></div>
+    <el-row>
+        <el-col :xs="12" :sm="6" :md="4" v-for="movie in movies" v-bind:key="movie.id">
+            <card-item-view v-bind:movie="movie"></card-item-view>
+        </el-col>
+    </el-row>
 </template>
 
 <script>

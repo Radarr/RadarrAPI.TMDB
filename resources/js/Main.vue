@@ -3,7 +3,7 @@
         <el-header>
             <div class="header-logo">
                 <router-link to="/">
-                    <img src="./assets/LogoDark.svg" alt="Radarr" />
+                    <img style="width:165px" src="./assets/LogoDark.svg" alt="Radarr" />
                 </router-link>
                     <span class="header-text">Apollo API</span>
             </div>
@@ -45,7 +45,6 @@
 
     img {
         height: auto;
-        width: 165px;
     }
 
     html, body {

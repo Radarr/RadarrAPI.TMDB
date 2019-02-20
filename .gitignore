@@ -10,3 +10,18 @@ Homestead.yaml
 npm-debug.log
 yarn-error.log
 /resources/downloadedStuff/
+/public/
+.idea/Radarr.iml
+public/fonts/
+public/images/
+resources/js/assets/Logo Dark.png
+resources/js/assets/Logo Dark@2x.png
+resources/js/assets/Logo Light.png
+resources/js/assets/Logo Light.svg
+resources/js/assets/Logo Light@2x.png
+resources/js/assets/Simple Logo Dark.png
+resources/js/assets/Simple Logo Dark.svg
+resources/js/assets/Simple Logo Dark@2x.png
+resources/js/assets/Simple Logo Light.png
+resources/js/assets/Simple Logo Light.svg
+resources/js/assets/Simple Logo Light@2x.png
