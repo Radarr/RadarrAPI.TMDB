@@ -5,14 +5,14 @@
             <span>{{movie.name}}</span>
             <div class="bottom clearfix">
                 <span>{{ movie.id }}</span>
-                <rating></rating>
+                <rating v-bind:rating="movie.rating"></rating>
             </div>
         </div>
     </el-card>
 </template>
 
 <script>
-    import Rating from './Rating';
+    import Rating from './rating/Rating';
 
     export default {
         name: "CardItemView",

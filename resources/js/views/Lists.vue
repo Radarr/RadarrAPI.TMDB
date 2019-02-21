@@ -30,9 +30,27 @@
                     {
                         id: 1,
                         name: "TestMovieName1",
-                        rotten: 70,
-                        imdb: 5.6
-                    }
+                        rating: {
+                            rotten: 70,
+                            imdb: 5.6
+                        }
+                    },
+                    {
+                        id: 2,
+                        name: "TestMovieName2",
+                        rating: {
+                            rotten: 30,
+                            imdb: 1.6
+                        }
+                    },
+                    {
+                        id: 3,
+                        name: "TestMovieName3",
+                        rating: {
+                            rotten: 90,
+                            imdb: 8.6
+                        }
+                    },
                 ]
             }
         },
