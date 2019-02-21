@@ -1,6 +1,6 @@
 <template>
-    <el-row>
-        <el-col :xs="12" :sm="6" :md="4" v-for="movie in movies" v-bind:key="movie.id">
+    <el-row :gutter="10" class="row-bg" justify="left">
+        <el-col :xs="22" :sm="8" :md="6" :lg="4" v-for="movie in movies" v-bind:key="movie.id">
             <card-item-view v-bind:movie="movie"></card-item-view>
         </el-col>
     </el-row>
@@ -19,5 +19,7 @@
 </script>
 
 <style scoped>
-
+    .el-col {
+        padding-bottom: 15px;
+    }
 </style>

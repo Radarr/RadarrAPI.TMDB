@@ -4,7 +4,7 @@
 
 <script>
     export default {
-        name: "RottenCritics",
+        name: "RottenCriticsRating",
         props: ["rottenCritics"],
         computed: {
             rottenPic(){
