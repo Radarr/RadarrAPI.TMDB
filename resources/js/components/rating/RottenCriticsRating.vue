@@ -4,7 +4,7 @@
 
 <script>
     export default {
-        name: "Imdb",
+        name: "RottenCriticsRating",
         props: ["rottenCritics"],
         computed: {
             rottenPic(){
@@ -25,5 +25,4 @@
 </script>
 
 <style scoped>
-
 </style>

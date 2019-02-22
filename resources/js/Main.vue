@@ -12,7 +12,7 @@
             <el-aside width="250px">
                 <navigation></navigation>
             </el-aside>
-            <el-main>
+            <el-main style="padding: 0">
                 <router-view></router-view>
             </el-main>
         </el-container>
@@ -28,6 +28,10 @@
         components: {
             Lists,
             Navigation
+        },
+        data() {
+            return {
+            }
         }
     }
 </script>
@@ -60,5 +64,9 @@
     .header-text {
         font-size: 24pt;
         padding-left: 20px;
+    }
+
+    span {
+        font-family: 'Century Gothic';
     }
 </style>

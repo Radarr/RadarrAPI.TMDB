@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Home from '../views/Home';
 import Lists from '../views/Lists';
 import About from '../views/About';
+import MoviePage from '../components/MoviePage';
 
 Vue.use(Router)
 
@@ -22,6 +23,12 @@ export default new Router({
             path: '/about',
             name: 'about',
             component: About
+        },
+        {
+            path: '/moviePage',
+            name: 'moviePage',
+            component: MoviePage,
+            props: true
         }
     ]
 })
