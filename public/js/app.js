@@ -3450,6 +3450,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -3458,6 +3464,26 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     Rating: _rating_Rating__WEBPACK_IMPORTED_MODULE_0__["default"],
     MovieCover: _MovieCover__WEBPACK_IMPORTED_MODULE_1__["default"]
+  },
+  computed: {
+    strippedTitle: function strippedTitle() {
+      if (this.windowWidth < 768) {
+        return this.movie.original_title;
+      }
+
+      if (this.windowWidth <= 1200 && this.windowWidth > 991 && this.movie.original_title.length > 20) {
+        return this.movie.original_title.slice(0, 20) + "...";
+      } else if (this.windowWidth < 1400 && this.windowWidth > 1199 && this.movie.original_title.length > 12) {
+        return this.movie.original_title.slice(0, 12) + "...";
+      }
+
+      return this.movie.original_title;
+    }
+  },
+  data: function data() {
+    return {
+      windowWidth: window.innerWidth
+    };
   }
 });
 
@@ -4024,7 +4050,7 @@ __webpack_require__.r(__webpack_exports__);
       response: {}
     };
   },
-  created: function created() {
+  mounted: function mounted() {
     var _this = this;
 
     axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/api/movies').then(function (response) {
@@ -90626,22 +90652,37 @@ var render = function() {
     [
       _c("movie-cover", { staticClass: "image", attrs: { movie: _vm.movie } }),
       _vm._v(" "),
-      _c("div", { staticStyle: { padding: "5px 15px 15px 15px" } }, [
-        _c("span", { staticClass: "movie-name" }, [
-          _vm._v(_vm._s(_vm.movie.name))
-        ]),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "bottom clearfix" },
-          [
-            _c("rating", {
-              attrs: { ratings: _vm.movie.ratings, "float-right": true }
-            })
-          ],
-          1
-        )
-      ])
+      _c(
+        "div",
+        { staticStyle: { padding: "5px 10px 15px 10px" } },
+        [
+          _c(
+            "el-row",
+            [
+              _c("el-col", { attrs: { md: 24 } }, [
+                _c("span", { staticClass: "movie-name" }, [
+                  _vm._v(_vm._s(_vm.strippedTitle))
+                ])
+              ]),
+              _vm._v(" "),
+              _c("el-col", { attrs: { md: 24 } }, [
+                _c(
+                  "div",
+                  { staticClass: "bottom clearfix" },
+                  [
+                    _c("rating", {
+                      attrs: { ratings: _vm.movie.ratings, "float-right": true }
+                    })
+                  ],
+                  1
+                )
+              ])
+            ],
+            1
+          )
+        ],
+        1
+      )
     ],
     1
   )
