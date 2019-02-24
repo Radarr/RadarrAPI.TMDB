@@ -5,7 +5,7 @@
             <span class="movie-name">{{movie.name}}</span>
             <div class="bottom clearfix">
                 <!-- <span>{{ movie.id }}</span> -->
-                <rating v-bind:rating="movie.rating"></rating>
+                <rating v-bind:ratings="movie.ratings" v-bind:float-right="true"></rating>
             </div>
         </div>
     </el-card>

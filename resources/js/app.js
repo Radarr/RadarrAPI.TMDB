@@ -41,7 +41,7 @@ const app = new Vue({
     components : {
         Main
     },
-    render: h => h(Main)
+    render: h => h(Main),
 });
 
 

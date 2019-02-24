@@ -1,5 +1,5 @@
 <template>
-    <span><img :src="getPic(rottenPic)" class="rating"/> {{rottenCritics}}%</span>
+    <span><img :src="getPic(rottenPic)" class="rating"/> {{rottenCritics.voting_average}}%</span>
 </template>
 
 <script>

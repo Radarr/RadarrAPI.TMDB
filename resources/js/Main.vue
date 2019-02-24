@@ -29,10 +29,6 @@
             Lists,
             Navigation
         },
-        data() {
-            return {
-            }
-        }
     }
 </script>
 

@@ -1,7 +1,9 @@
 <template>
-    <el-row :gutter="10" class="row-bg" justify="left">
+    <el-row :gutter="10" class="row-bg">
         <el-col :xs="22" :sm="8" :md="6" :lg="4" v-for="movie in movies" v-bind:key="movie.id">
-            <card-item-view v-bind:movie="movie"></card-item-view>
+            <div @click="loadMovie(movie)">
+                <card-item-view v-bind:movie="movie"></card-item-view>
+            </div>
         </el-col>
     </el-row>
 </template>
@@ -14,6 +16,11 @@
         props: ["movies"],
         components: {
             CardItemView
+        },
+        methods: {
+            loadMovie(movie) {
+                this.$router.push({ name: 'moviePage', params: { movie: movie } });
+            }
         }
     }
 </script>
