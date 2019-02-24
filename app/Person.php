@@ -6,49 +6,50 @@ use Illuminate\Database\Eloquent\Model;
 
 class Person extends Model
 {
-    protected $table = "persons";
+    protected $table = 'persons';
 
-    protected $hidden = ["pivot"];
+    protected $hidden = ['pivot'];
 
-    protected $appends = ["department", "job", "order", "character"];
+    protected $appends = ['department', 'job', 'order', 'character'];
 
-    public function movies() {
-        return $this->belongsToMany("App\Movie", "credits")->withPivot('type', 'character', 'order', 'job', 'department', 'credit_id');
+    public function movies()
+    {
+        return $this->belongsToMany("App\Movie", 'credits')->withPivot('type', 'character', 'order', 'job', 'department', 'credit_id');
     }
 
     public function getDepartmentAttribute()
     {
-        if ($this->pivot == null)
-        {
-            return null;
+        if ($this->pivot == null) {
+            return;
         }
+
         return $this->pivot->department;
     }
 
     public function getJobAttribute()
     {
-        if ($this->pivot == null)
-        {
-            return null;
+        if ($this->pivot == null) {
+            return;
         }
+
         return $this->pivot->job;
     }
 
     public function getOrderAttribute()
     {
-        if ($this->pivot == null)
-        {
-            return null;
+        if ($this->pivot == null) {
+            return;
         }
+
         return $this->pivot->order;
     }
 
     public function getCharacterAttribute()
     {
-        if ($this->pivot == null)
-        {
-            return null;
+        if ($this->pivot == null) {
+            return;
         }
+
         return $this->pivot->character;
     }
 }
