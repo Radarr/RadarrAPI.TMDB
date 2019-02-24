@@ -8,12 +8,9 @@
 Homestead.json
 Homestead.yaml
 npm-debug.log
-yarn-error.log
 /resources/downloadedStuff/
 /public/
-.idea/Radarr.iml
-public/fonts/
-public/images/
+.idea/*
 resources/js/assets/Logo Dark.png
 resources/js/assets/Logo Dark@2x.png
 resources/js/assets/Logo Light.png
