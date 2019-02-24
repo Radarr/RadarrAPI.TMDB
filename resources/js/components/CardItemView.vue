@@ -1,6 +1,6 @@
 <template>
     <el-card :body-style="{ padding: '0px' }">
-        <img src="../assets/cover-dark-radarr.png" class="image">
+        <movie-cover v-bind:movie="movie" class="image"></movie-cover>
         <div style="padding: 5px 15px 15px 15px;">
             <span class="movie-name">{{movie.name}}</span>
             <div class="bottom clearfix">
@@ -13,12 +13,14 @@
 
 <script>
     import Rating from './rating/Rating';
+    import MovieCover from './MovieCover';
 
     export default {
         name: "CardItemView",
         props: ["movie"],
         components: {
-            Rating
+            Rating,
+            MovieCover
         }
     }
 </script>

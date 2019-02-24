@@ -29,14 +29,14 @@
         },
         data() {
             return {
-                listViewActive: true,
+                listViewActive: false,
                 movies: [],
                 response: {}
             }
         },
         created() {
             axios
-                .get('http://radarr.test/api/movies')
+                .get('/api/movies')
                 .then(response => {
                     this.movies = response.data.data;
                     this.response = response;

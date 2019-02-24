@@ -26,8 +26,13 @@ import Main from './Main';
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import router from './router';
+import axios from 'axios';
+import LazyLoadDirective from './directives/LazyLoadDirective'
 
 Vue.use(ElementUI);
+axios.defaults.baseURL = "http://radarr.test";
+Vue.directive("lazyload", LazyLoadDirective);
+
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
