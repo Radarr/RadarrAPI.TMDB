@@ -5,7 +5,7 @@
             class="image__item"
             :data-url="calcSrc"
             :data-ready="ready"
-            alt="test"
+            alt="../assets/cover-dark-radarr.png"
         >
     </figure>
 </template>
@@ -19,7 +19,7 @@
         computed: {
             calcSrc() {
                 this.ready = true;
-                return "http://image.tmdb.org/t/p/w500" + this.$props.movie.poster_path;
+                return "https://image.tmdb.org/t/p/w300" + this.$props.movie.poster_path;
             }
         },
         data() {
@@ -49,6 +49,7 @@
                     &__spacer {
                         display: none;
                         width: 100%;
+                        height: auto;
                     }
                 }
             }
@@ -60,6 +61,11 @@
             transition: all 0.4s ease-in-out;
             opacity: 0;
             visibility: hidden;
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
         }
     }
 </style>

@@ -3586,7 +3586,7 @@ __webpack_require__.r(__webpack_exports__);
   computed: {
     calcSrc: function calcSrc() {
       this.ready = true;
-      return "http://image.tmdb.org/t/p/w500" + this.$props.movie.poster_path;
+      return "https://image.tmdb.org/t/p/w300" + this.$props.movie.poster_path;
     }
   },
   data: function data() {
@@ -4065,6 +4065,20 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_rating_Rating__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/rating/Rating */ "./resources/js/components/rating/Rating.vue");
+/* harmony import */ var _components_MovieCover__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/MovieCover */ "./resources/js/components/MovieCover.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -4090,10 +4104,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "MoviePage",
   components: {
-    Rating: _components_rating_Rating__WEBPACK_IMPORTED_MODULE_0__["default"]
+    Rating: _components_rating_Rating__WEBPACK_IMPORTED_MODULE_0__["default"],
+    MovieCover: _components_MovieCover__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
   props: {
     movie: {
@@ -4101,7 +4117,11 @@ __webpack_require__.r(__webpack_exports__);
       required: true
     }
   },
-  computed: {}
+  computed: {
+    calcUrl: function calcUrl() {
+      return "https://image.tmdb.org/t/p/w1280/" + this.$props.movie.backdrop_path;
+    }
+  }
 });
 
 /***/ }),
@@ -10369,7 +10389,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".image__wrapper[data-v-0dfc4392] {\n  width: auto;\n  height: auto;\n  align-items: center;\n  border-radius: 4px;\n}\n.image__wrapper.loaded .image__item[data-v-0dfc4392] {\n  visibility: visible;\n  opacity: 1;\n  border: 0;\n}\n.image__wrapper.loaded .image__spacer[data-v-0dfc4392] {\n  display: none;\n  width: 100%;\n}\n.image__item[data-v-0dfc4392] {\n  width: 100%;\n  border-radius: 4px;\n  transition: all 0.4s ease-in-out;\n  opacity: 0;\n  visibility: hidden;\n}", ""]);
+exports.push([module.i, ".image__wrapper[data-v-0dfc4392] {\n  width: auto;\n  height: auto;\n  align-items: center;\n  border-radius: 4px;\n}\n.image__wrapper.loaded .image__item[data-v-0dfc4392] {\n  visibility: visible;\n  opacity: 1;\n  border: 0;\n}\n.image__wrapper.loaded .image__spacer[data-v-0dfc4392] {\n  display: none;\n  width: 100%;\n  height: auto;\n}\n.image__item[data-v-0dfc4392] {\n  width: 100%;\n  border-radius: 4px;\n  transition: all 0.4s ease-in-out;\n  opacity: 0;\n  visibility: hidden;\n}\n.image img[data-v-0dfc4392] {\n  width: 100%;\n  height: 100%;\n}", ""]);
 
 // exports
 
@@ -10427,7 +10447,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\nimg[data-v-2e5cb11a] {\n    width: 100%;\n}\n.movie-name[data-v-2e5cb11a] {\n    font-size: larger;\n}\n", ""]);
+exports.push([module.i, "\n.image[data-v-2e5cb11a] {\n    width: 100%;\n}\n.movie-name[data-v-2e5cb11a] {\n    font-size: larger;\n}\n", ""]);
 
 // exports
 
@@ -10522,7 +10542,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.el-container[data-v-f142ef60] {\n    padding-top: 20px;\n}\n.el-header[data-v-f142ef60] {\n    background-color: white;\n    color: #24292E;\n}\n.el-main[data-v-f142ef60] {\n    padding-top: 10px;\n}\n", ""]);
+exports.push([module.i, "\n.upper[data-v-f142ef60] {\n    padding: 15px 15px 0 15px;\n}\n.lower[data-v-f142ef60] {\n    padding: 0 15px 0 15px;\n}\n.outer[data-v-f142ef60] {\n    height: 100%;\n    z-index: 1;\n}\n.bg[data-v-f142ef60] {\n    position: absolute;\n    z-index: -1;\n    top: 0;\n    bottom: 0;\n    left: 0;\n    right: 0;\n    opacity: .25;\n    width: 100%;\n    height: 100%;\n    background-size:     cover;                      /* <------ */\n    background-repeat:   no-repeat;\n    background-position: center center;\n}\n.el-header[data-v-f142ef60] {\n    background-color: transparent;\n    color: #24292E;\n}\n.el-main[data-v-f142ef60] {\n    padding-top: 15px;\n}\nmovie-cover[data-v-f142ef60] {\n    height: 20vh;\n}\n", ""]);
 
 // exports
 
@@ -90654,7 +90674,7 @@ var render = function() {
     _vm._l(_vm.movies, function(movie) {
       return _c(
         "el-col",
-        { key: movie.id, attrs: { xs: 22, sm: 8, md: 6, lg: 4 } },
+        { key: movie.id, attrs: { xs: 24, sm: 8, md: 6, lg: 4 } },
         [
           _c(
             "div",
@@ -90769,7 +90789,11 @@ var render = function() {
       _vm._v(" "),
       _c("img", {
         staticClass: "image__item",
-        attrs: { "data-url": _vm.calcSrc, "data-ready": _vm.ready, alt: "test" }
+        attrs: {
+          "data-url": _vm.calcSrc,
+          "data-ready": _vm.ready,
+          alt: "../assets/cover-dark-radarr.png"
+        }
       })
     ]
   )
@@ -91240,60 +91264,108 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      _c(
-        "el-container",
-        [
-          _c(
-            "el-header",
-            { staticStyle: { height: "auto" } },
-            [
-              _c(
-                "el-row",
-                [
-                  _c("el-col", { attrs: { md: 20 } }, [
-                    _c("h2", [_vm._v(_vm._s(_vm.movie.original_title))])
-                  ]),
-                  _vm._v(" "),
-                  _c("el-col", { attrs: { md: 4 } }, [
-                    _c("span", { staticStyle: { float: "right" } }, [
-                      _vm._v("ReleaseDate: " + _vm._s(_vm.movie.release_date))
+  return _c("div", { staticClass: "outer" }, [
+    _c("div", {
+      staticClass: "bg",
+      style: { backgroundImage: "url(" + _vm.calcUrl + ")" }
+    }),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "upper" },
+      [
+        _c(
+          "el-row",
+          [
+            _c(
+              "el-col",
+              { attrs: { sm: 6, md: 5, lg: 4 } },
+              [_c("movie-cover", { attrs: { movie: _vm.movie } })],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "el-col",
+              { attrs: { sm: 18, md: 19, lg: 20 } },
+              [
+                _c(
+                  "el-container",
+                  [
+                    _c(
+                      "el-header",
+                      { staticStyle: { height: "auto" } },
+                      [
+                        _c(
+                          "el-row",
+                          [
+                            _c("el-col", { attrs: { md: 20 } }, [
+                              _c("h2", [
+                                _vm._v(_vm._s(_vm.movie.original_title))
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _c("el-col", { attrs: { md: 4 } }, [
+                              _c("span", { staticStyle: { float: "right" } }, [
+                                _vm._v(
+                                  "ReleaseDate: " +
+                                    _vm._s(_vm.movie.release_date)
+                                )
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "el-col",
+                              { attrs: { md: 24 } },
+                              [
+                                _c("span", [
+                                  _vm._v("MovieID:" + _vm._s(_vm.movie.id))
+                                ]),
+                                _vm._v(" "),
+                                _c("rating", {
+                                  attrs: {
+                                    "float-right": true,
+                                    ratings: _vm.movie.ratings
+                                  }
+                                })
+                              ],
+                              1
+                            )
+                          ],
+                          1
+                        )
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c("el-main", [
+                      _c("p", [_vm._v(_vm._s(_vm.movie.overview))])
                     ])
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "el-col",
-                    { attrs: { md: 24 } },
-                    [
-                      _c("span", [_vm._v("MovieID:" + _vm._s(_vm.movie.id))]),
-                      _vm._v(" "),
-                      _c("rating", {
-                        attrs: {
-                          "float-right": true,
-                          ratings: _vm.movie.ratings
-                        }
-                      })
-                    ],
-                    1
-                  )
-                ],
-                1
-              )
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c("el-main", [_c("p", [_vm._v(_vm._s(_vm.movie.overview))])])
-        ],
-        1
-      )
-    ],
-    1
-  )
+                  ],
+                  1
+                )
+              ],
+              1
+            )
+          ],
+          1
+        )
+      ],
+      1
+    ),
+    _vm._v(" "),
+    _vm._m(0)
+  ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "lower" }, [
+      _c("span", [_c("h1", [_vm._v("Test Test Test Test")])])
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -107261,7 +107333,6 @@ __webpack_require__.r(__webpack_exports__);
     function handleIntersect(entries, observer) {
       entries.forEach(function (entry) {
         if (!entry.isIntersecting) {
-          console.log(entry);
           return;
         } else {
           loadImage();

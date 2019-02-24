@@ -1,6 +1,6 @@
 <template>
     <el-row :gutter="10" class="row-bg">
-        <el-col :xs="22" :sm="8" :md="6" :lg="4" v-for="movie in movies" v-bind:key="movie.id">
+        <el-col :xs="24" :sm="8" :md="6" :lg="4" v-for="movie in movies" v-bind:key="movie.id">
             <div @click="loadMovie(movie)">
                 <card-item-view v-bind:movie="movie"></card-item-view>
             </div>
