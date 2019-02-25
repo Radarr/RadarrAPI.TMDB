@@ -34,7 +34,7 @@
                 response: {}
             }
         },
-        created() {
+        mounted() {
             axios
                 .get('/api/movies')
                 .then(response => {
