@@ -11,9 +11,9 @@
 |
 */
 
-Route::group(["domain" => "metadata.{test}.{tld}"], function() {
+Route::group(['domain' => 'metadata.{test}.{tld}'], function () {
     Route::get('/', function () {
-        return view("app");
+        return view('app');
     });
 });
 
