@@ -17,16 +17,16 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get("/movie/{id}", "API\MovieController@index");
+Route::get('/movie/{id}', "API\MovieController@index");
 
-Route::get("/collection/{id}", function($id) {
-    return \App\Collection::with(["movies"])->findOrFail($id);
+Route::get('/collection/{id}', function ($id) {
+    return \App\Collection::with(['movies'])->findOrFail($id);
 });
 
-Route::get("/collection/{id}/movies", function($id) {
-    return \App\Collection::with(["movies"])->findOrFail($id)->movies;
+Route::get('/collection/{id}/movies', function ($id) {
+    return \App\Collection::with(['movies'])->findOrFail($id)->movies;
 });
 
-Route::get("/movies", function() {
-   return \App\Movie::select()->filter()->orderBy("popularity", "DESC")->paginate(25);
+Route::get('/movies', function () {
+    return \App\Movie::select()->filter()->orderBy('popularity', 'DESC')->paginate(25);
 });
