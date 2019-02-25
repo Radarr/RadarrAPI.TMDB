@@ -28,5 +28,5 @@ Route::get("/collection/{id}/movies", function($id) {
 });
 
 Route::get("/movies", function() {
-   return \App\Movie::select()->filter()->orderBy("popularity", "DESC")->paginate(100);
+   return \App\Movie::select()->filter()->orderBy("popularity", "DESC")->paginate(25);
 });

@@ -33,4 +33,8 @@
     .movie-name {
         font-size: larger;
     }
+
+    .el-card__body:before {
+        filter: blur(10px);
+    }
 </style>
