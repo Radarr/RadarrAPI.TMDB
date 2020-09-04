@@ -39,9 +39,9 @@ class MappingAddRequest extends JSONRequest
         ];
 
         if ($this->input('type') == 'title') {
-              $arr['aka_title'] = ['required', 'regex:/^.{2}.+/'];
+            $arr['aka_title'] = ['required', 'regex:/^.{2}.+/'];
         } elseif ($this->input('type') == 'year') {
-              $arr['aka_year'] = ['required', "regex:/^(19|20)\d{2}$/"];
+            $arr['aka_year'] = ['required', "regex:/^(19|20)\d{2}$/"];
         }
 
         return $arr;
