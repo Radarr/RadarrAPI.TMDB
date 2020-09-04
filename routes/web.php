@@ -12,8 +12,8 @@
 */
 
 Route::get('/', function () {
-	$movies = \App\Movie::find([11,12]);
-	//$movies = array();
+    $movies = \App\Movie::find([11, 12]);
+    //$movies = array();
     return view('welcome', ['movies' => $movies]);
 });
 
